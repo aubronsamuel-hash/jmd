@@ -1,18 +1,18 @@
 {
-  "timestamp": "2025-09-30T08:00:00Z",
+  "timestamp": "2025-10-01T08:00:00Z",
   "plan": [
-    "Activer le service calendrier pour exporter les plannings en ICS et traiter les webhooks entrants.",
-    "Orchestrer la publication documentaire multi-connecteurs (Drive, SharePoint, S3) via un gateway unique.",
-    "Exposer les variables BACKEND_CALENDAR_*, BACKEND_STORAGE_* et BACKEND_NOTIFICATION_EMAIL_* dans la configuration.",
-    "Etendre les tests backend pour couvrir ICS, detection de conflits et stockage.",
-    "Actualiser roadmap, changelog et documentation API sur les integrations externes."
+    "Structurer l'entrepot analytics (missions, paie, incidents materiel) et relier les evenements existants.",
+    "Expose `/api/v1/analytics/dashboard` avec KPIs (heures, couverture, masse salariale) et filtres multi-dimension.",
+    "Fournir `/api/v1/analytics/exports` (CSV/PDF/PNG) signes/base64 avec metadonnees projet et horodatage.",
+    "Contrer la latence < 15 min via controles refresh et heatmap de charge.",
+    "Actualiser roadmap, changelog et documentation technique (architecture ETL, donnees sensibles)."
   ],
-  "last_update": "2025-09-30T18:00:00Z",
+  "last_update": "2025-10-01T18:00:00Z",
   "status": "completed",
   "notes": [
-    "CalendarSyncService exporte les plannings, conserve l'historique et signale les conflits via CalendarWebhookReport.",
-    "StorageGateway genere un resume texte avec metadata/checksum et diffuse sur les connecteurs declares.",
-    "Configuration enrichie (calendar/storage/email) documentee dans l'API et parsee via les listes comma-separees.",
-    "Tests pytest valident la generation ICS, l'analyse des webhooks, le stockage et le parsing des settings."
+    "Entrepot analytics alimente par `analytics_mission_events`, `analytics_payroll_records`, `analytics_equipment_incidents` avec latence controlee.",
+    "Dashboard FastAPI fournit KPIs, heatmap horaire et comparaisons journaliere selon projet/lieu/equipe.",
+    "Exports CSV/PDF/PNG signes (SHA-256) avec metadonnees filtres, integres au storage gateway pour diffusion documentaire.",
+    "Tests pytest couvrent agrégation multi-format, filtres et verification des delais < 15 min."
   ]
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025-10-01
+- Entrepot analytics structure (`analytics_mission_events`, `analytics_payroll_records`, `analytics_equipment_incidents`) alimente par les evenements planning/paie/logistique.
+- Service `backend.domain.analytics` et endpoints FastAPI `/api/v1/analytics/dashboard` + `/api/v1/analytics/exports` (KPIs, heatmap, comparatifs, latence < 15 min).
+- Generation d'exports CSV/PDF/PNG signes (base64 + SHA-256) avec metadonnees filtres et integration storage gateway.
+- Tests backend `test_analytics.py` garantissant aggregation, filtres multi-dimension et validite des exports.
+- Ref: docs/roadmap/step-11.md
+
 ## 2025-09-30
 - Synchronisation calendrier via module `backend.integrations.calendar` (exports ICS, webhooks, detection de conflits).
 - Passage d'un gateway de stockage documentaire mutualise (`backend.integrations.storage`) pour archiver les plannings.

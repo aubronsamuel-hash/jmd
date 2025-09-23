@@ -1,15 +1,20 @@
 """FastAPI application entrypoint."""
 
+from datetime import date
 from typing import Annotated, Any, Iterator
 from uuid import UUID
 
-from fastapi import Body, Depends, FastAPI, HTTPException, Response, status
+from fastapi import Body, Depends, FastAPI, HTTPException, Query, Response, status
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session, sessionmaker
 
 from .config import get_settings
 from .db import create_engine_from_settings, create_session_factory, run_migrations
 from .domain import (
+    AnalyticsDashboard,
+    AnalyticsExport,
+    AnalyticsExportFormat,
+    AnalyticsFilter,
     Artist,
     ArtistConflictError,
     ArtistCreate,
@@ -22,6 +27,8 @@ from .domain import (
     create_artist,
     create_planning,
     delete_artist,
+    generate_analytics_export,
+    get_analytics_dashboard,
     get_artist,
     get_planning,
     list_artists,
@@ -301,6 +308,69 @@ def create_app() -> FastAPI:
             return get_planning(session=session, planning_id=planning_id)
         except PlanningNotFoundError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    @app.get(
+        f"{settings.api_prefix}/analytics/dashboard",
+        response_model=AnalyticsDashboard,
+        tags=["analytics"],
+    )
+    async def get_analytics_dashboard_item(
+        session: SessionDependency,
+        project: str | None = Query(default=None, description="Filtre projet"),
+        location: str | None = Query(default=None, description="Filtre lieu"),
+        team: str | None = Query(default=None, description="Filtre equipe"),
+        start_date: date | None = Query(
+            default=None, description="Date de debut (incluse)", alias="start_date"
+        ),
+        end_date: date | None = Query(
+            default=None, description="Date de fin (incluse)", alias="end_date"
+        ),
+    ) -> AnalyticsDashboard:
+        """Expose KPIs, heatmaps and curves for the analytics dashboard."""
+
+        filters = AnalyticsFilter(
+            project=project,
+            location=location,
+            team=team,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return get_analytics_dashboard(session=session, filters=filters)
+
+    @app.get(
+        f"{settings.api_prefix}/analytics/exports",
+        response_model=AnalyticsExport,
+        tags=["analytics"],
+    )
+    async def get_analytics_export_item(
+        session: SessionDependency,
+        export_format: AnalyticsExportFormat = Query(
+            default=AnalyticsExportFormat.CSV,
+            alias="format",
+            description="Format d'export desire",
+        ),
+        project: str | None = Query(default=None, description="Filtre projet"),
+        location: str | None = Query(default=None, description="Filtre lieu"),
+        team: str | None = Query(default=None, description="Filtre equipe"),
+        start_date: date | None = Query(
+            default=None, description="Date de debut (incluse)", alias="start_date"
+        ),
+        end_date: date | None = Query(
+            default=None, description="Date de fin (incluse)", alias="end_date"
+        ),
+    ) -> AnalyticsExport:
+        """Generate CSV/PDF/PNG exports for the analytics dashboard."""
+
+        filters = AnalyticsFilter(
+            project=project,
+            location=location,
+            team=team,
+            start_date=start_date,
+            end_date=end_date,
+        )
+        return generate_analytics_export(
+            session=session, filters=filters, export_format=export_format
+        )
 
     @app.post(
         f"{settings.api_prefix}/notifications/test",
