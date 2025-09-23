@@ -152,11 +152,24 @@ if ($prContext) {
     } else {
       $newBody = $refLine
     }
-    try {
-      gh pr edit $prContext.Number --body "$newBody" | Out-Null
+    $ghUpdateSucceeded = $false
+    if ($gh) {
+      try {
+        gh pr edit $prContext.Number --body "$newBody" | Out-Null
+        if ($LASTEXITCODE -eq 0 -and $?) {
+          $ghUpdateSucceeded = $true
+        }
+      } catch {
+        $ghUpdateSucceeded = $false
+      }
+    }
+
+    if ($ghUpdateSucceeded) {
       Write-Info 'Appended roadmap ref to PR body.'
-    } catch {
+      $global:LASTEXITCODE = 0
+    } else {
       Write-Info 'Failed to append to PR body. Falling back to empty commit.'
+      $global:LASTEXITCODE = 0
       $message = Get-CommitMessage
       if (-not ($message -and $message.Contains($refLine))) {
         Write-Info 'Creating empty commit with roadmap ref...'
