@@ -1,9 +1,11 @@
 # Roadmap
 
 ## Current Step
-- [STEP 10](./step-10.md)
+- [STEP 12](./step-12.md)
 
 ## History
+- [STEP 11](./step-11.md)
+- [STEP 10](./step-10.md)
 - [STEP 09](./step-09.md)
 - [STEP 08](./step-08.md)
 - [STEP 07](./step-07.md)

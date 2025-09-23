@@ -96,6 +96,26 @@ class Settings(BaseSettings):
         default=None,
         alias="BACKEND_STORAGE_S3_REGION",
     )
+    audit_signature_secret: str = Field(
+        default="audit-secret-demo",
+        alias="BACKEND_AUDIT_SIGNATURE_SECRET",
+    )
+    audit_default_organization: str = Field(
+        default="default-org",
+        alias="BACKEND_AUDIT_DEFAULT_ORG",
+    )
+    audit_retention_days: int = Field(
+        default=365,
+        alias="BACKEND_AUDIT_RETENTION_DAYS",
+    )
+    audit_archive_days: int = Field(
+        default=180,
+        alias="BACKEND_AUDIT_ARCHIVE_DAYS",
+    )
+    audit_rgpd_sla_days: int = Field(
+        default=30,
+        alias="BACKEND_AUDIT_RGPD_SLA_DAYS",
+    )
 
     model_config = {"env_file": ".env", "extra": "ignore", "populate_by_name": True}
 

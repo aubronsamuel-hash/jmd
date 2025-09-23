@@ -145,7 +145,8 @@ foreach ($req in $agentRequirements) {
 $required = @(
   'docs/agents/README.md',
   'docs/CHANGELOG.md',
-  'docs/codex/last_output.json'
+  'docs/codex/last_output.json',
+  'docs/compliance/audit-register.md'
 )
 
 $missing = @()

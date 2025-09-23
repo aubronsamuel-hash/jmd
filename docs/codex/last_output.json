@@ -1,18 +1,19 @@
 {
-  "timestamp": "2025-10-01T08:00:00Z",
+  "timestamp": "2025-10-02T08:00:00Z",
   "plan": [
-    "Structurer l'entrepot analytics (missions, paie, incidents materiel) et relier les evenements existants.",
-    "Expose `/api/v1/analytics/dashboard` avec KPIs (heures, couverture, masse salariale) et filtres multi-dimension.",
-    "Fournir `/api/v1/analytics/exports` (CSV/PDF/PNG) signes/base64 avec metadonnees projet et horodatage.",
-    "Contrer la latence < 15 min via controles refresh et heatmap de charge.",
-    "Actualiser roadmap, changelog et documentation technique (architecture ETL, donnees sensibles)."
+    "Deployer un service d'audit signe couvrant artistes, plannings, notifications et integrations.",
+    "Fournir des exports JSON/CSV filtres via `/api/v1/audit/logs` avec signature HMAC.",
+    "Industrialiser la retention (policy + job) et tracer les executions dans un registre dedie.",
+    "Formaliser le workflow RGPD (demande -> completion) et alimenter le registre d'audit.",
+    "Documenter le registre d'audit/retention et renforcer le guard documentaire."
   ],
-  "last_update": "2025-10-01T18:00:00Z",
+  "last_update": "2025-10-02T18:00:00Z",
   "status": "completed",
   "notes": [
-    "Entrepot analytics alimente par `analytics_mission_events`, `analytics_payroll_records`, `analytics_equipment_incidents` avec latence controlee.",
-    "Dashboard FastAPI fournit KPIs, heatmap horaire et comparaisons journaliere selon projet/lieu/equipe.",
-    "Exports CSV/PDF/PNG signes (SHA-256) avec metadonnees filtres, integres au storage gateway pour diffusion documentaire.",
-    "Tests pytest couvrent agrégation multi-format, filtres et verification des delais < 15 min."
+    "`AuditTrailService` orchestre journal immuable, exports HMAC et dependances FastAPI.",
+    "Routes `/api/v1/audit/*` couvrent consultation, export, retention; `/api/v1/rgpd/*` gere le workflow RGPD.",
+    "Migration `20241002_03_audit_trail` ajoute les tables `audit_logs`, `audit_retention_*`, `rgpd_requests`.",
+    "Tests `tests/backend/test_audit.py` valident journalisation, exports, RGPD et purge archivage.",
+    "Doc `docs/compliance/audit-register.md` + guard assurent la presence du registre et des procedures."
   ]
 }
