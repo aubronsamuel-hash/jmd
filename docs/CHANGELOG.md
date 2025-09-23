@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025-10-03
+- Instrumentation observabilite backend (`backend.observability`, middleware traces, endpoint `/metrics`).
+- Metrics/alerting pour API, calendrier, jobs retention + tests `tests/backend/test_observability.py`.
+- Documentation runbooks/tableaux de bord (`docs/observability/*.md`) et roadmap step-13 validee.
+- Ref: docs/roadmap/step-13.md
+
 ## 2025-10-02
 - Mise en place du registre d'audit (`backend.domain.audit`, service HMAC, exports JSON/CSV, endpoints `/api/v1/audit/*`).
 - Journalisation des modules artistes/planning/notifications/storage + workflow RGPD (`/api/v1/rgpd/*`) et politiques de retention configurables.

@@ -8,6 +8,7 @@ import json
 import hmac
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
+import time
 from enum import Enum, StrEnum
 from io import StringIO
 from typing import Any, Iterable, Mapping
@@ -17,6 +18,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
+from backend.observability import get_metrics, record_event, trace, update_attributes
 from backend.models import (
     AuditLog as AuditLogModel,
     AuditRetentionEvent as AuditRetentionEventModel,
@@ -334,6 +336,18 @@ class AuditTrailService:
         commit: bool = False,
     ) -> AuditLogEntry:
         org = organization_id or self._default_org
+        update_attributes(
+            organization_id=org,
+            audit_event=event_type.value,
+            actor_id=actor_id,
+            target_id=target_id,
+        )
+        record_event(
+            "audit.log_event",
+            module=module.value,
+            action=action,
+            organization_id=org,
+        )
         normalized_payload = self._normalize_payload(payload)
         created_at_utc = datetime.now(timezone.utc)
         signature_payload = {
@@ -551,61 +565,93 @@ class AuditTrailService:
         reference_time: datetime | None = None,
         commit: bool = False,
     ) -> RetentionSummary:
-        policy = self.get_retention_policy(session, organization_id)
-        reference = _ensure_timezone(reference_time or datetime.now(timezone.utc))
-        reference_naive = reference.replace(tzinfo=None)
-        archive_before = reference - timedelta(days=policy.archive_after_days)
-        purge_before = reference - timedelta(days=policy.retention_days)
-        archive_cutoff = archive_before.replace(tzinfo=None)
-        purge_cutoff = purge_before.replace(tzinfo=None)
-        archived_count = 0
-        stmt = select(AuditLogModel).where(
-            AuditLogModel.organization_id == organization_id,
-            AuditLogModel.created_at <= archive_cutoff,
-            AuditLogModel.archived_at.is_(None),
+        metrics = get_metrics()
+        update_attributes(organization_id=organization_id)
+        start_time = time.perf_counter()
+        summary: RetentionSummary | None = None
+        with trace("audit.retention.job", organization_id=organization_id) as span:
+            try:
+                policy = self.get_retention_policy(session, organization_id)
+                reference = _ensure_timezone(reference_time or datetime.now(timezone.utc))
+                reference_naive = reference.replace(tzinfo=None)
+                archive_before = reference - timedelta(days=policy.archive_after_days)
+                purge_before = reference - timedelta(days=policy.retention_days)
+                archive_cutoff = archive_before.replace(tzinfo=None)
+                purge_cutoff = purge_before.replace(tzinfo=None)
+                archived_count = 0
+                stmt = select(AuditLogModel).where(
+                    AuditLogModel.organization_id == organization_id,
+                    AuditLogModel.created_at <= archive_cutoff,
+                    AuditLogModel.archived_at.is_(None),
+                )
+                for log in session.scalars(stmt):
+                    log.archived_at = reference_naive
+                    log.archive_reference = f"archive-{reference.strftime('%Y%m%d%H%M%S')}"
+                    archived_count += 1
+                purge_stmt = (
+                    delete(AuditLogModel)
+                    .where(AuditLogModel.organization_id == organization_id)
+                    .where(AuditLogModel.created_at < purge_cutoff)
+                )
+                purge_result = session.execute(purge_stmt)
+                purged_count = purge_result.rowcount or 0
+                event_model = AuditRetentionEventModel(
+                    organization_id=organization_id,
+                    executed_at=reference_naive,
+                    purged_count=purged_count,
+                    archived_count=archived_count,
+                    anonymized_count=0,
+                    details={
+                        "archive_before": archive_before.isoformat(),
+                        "purge_before": purge_before.isoformat(),
+                    },
+                )
+                session.add(event_model)
+                session.flush()
+                summary = RetentionSummary(
+                    organization_id=organization_id,
+                    executed_at=reference,
+                    purged_count=purged_count,
+                    archived_count=archived_count,
+                    anonymized_count=0,
+                    details=event_model.details,
+                )
+                span.set_attribute("purged.count", purged_count)
+                span.set_attribute("archived.count", archived_count)
+                self.log_event(
+                    session,
+                    event_type=AuditEventType.RETENTION_EXECUTED,
+                    module=AuditModule.RETENTION,
+                    action="job.run",
+                    organization_id=organization_id,
+                    payload=summary.model_dump(),
+                )
+                if commit:
+                    session.commit()
+            except Exception:
+                metrics.increment(
+                    "retention_job_failures_total",
+                    labels={"organization": organization_id},
+                )
+                span.set_attribute("job.status", "error")
+                raise
+        assert summary is not None  # pragma: no cover - defensive guard
+        duration = max(0.0, time.perf_counter() - start_time)
+        metrics.observe(
+            "retention_job_duration_seconds",
+            duration,
+            labels={"organization": organization_id},
         )
-        for log in session.scalars(stmt):
-            log.archived_at = reference_naive
-            log.archive_reference = f"archive-{reference.strftime('%Y%m%d%H%M%S')}"
-            archived_count += 1
-        purge_stmt = (
-            delete(AuditLogModel)
-            .where(AuditLogModel.organization_id == organization_id)
-            .where(AuditLogModel.created_at < purge_cutoff)
+        metrics.set_gauge(
+            "retention_job_archived_records",
+            float(summary.archived_count),
+            labels={"organization": organization_id},
         )
-        purge_result = session.execute(purge_stmt)
-        purged_count = purge_result.rowcount or 0
-        event_model = AuditRetentionEventModel(
-            organization_id=organization_id,
-            executed_at=reference_naive,
-            purged_count=purged_count,
-            archived_count=archived_count,
-            anonymized_count=0,
-            details={
-                "archive_before": archive_before.isoformat(),
-                "purge_before": purge_before.isoformat(),
-            },
+        metrics.set_gauge(
+            "retention_job_purged_records",
+            float(summary.purged_count),
+            labels={"organization": organization_id},
         )
-        session.add(event_model)
-        session.flush()
-        summary = RetentionSummary(
-            organization_id=organization_id,
-            executed_at=reference,
-            purged_count=purged_count,
-            archived_count=archived_count,
-            anonymized_count=0,
-            details=event_model.details,
-        )
-        self.log_event(
-            session,
-            event_type=AuditEventType.RETENTION_EXECUTED,
-            module=AuditModule.RETENTION,
-            action="job.run",
-            organization_id=organization_id,
-            payload=summary.model_dump(),
-        )
-        if commit:
-            session.commit()
         return summary
 
     # ------------------------------------------------------------------
@@ -619,6 +665,7 @@ class AuditTrailService:
         commit: bool = False,
     ) -> RgpdRequestRecord:
         org = payload.organization_id or self._default_org
+        update_attributes(organization_id=org, rgpd_subject=payload.subject_reference)
         submitted_at = datetime.now(timezone.utc)
         due_at = submitted_at + timedelta(days=self._rgpd_sla_days)
         model = RgpdRequestModel(
@@ -678,6 +725,10 @@ class AuditTrailService:
         model = session.get(RgpdRequestModel, request_id)
         if model is None:
             raise RgpdRequestNotFound(str(request_id))
+        update_attributes(
+            organization_id=model.organization_id,
+            rgpd_subject=model.subject_reference,
+        )
         now = datetime.now(timezone.utc)
         model.status = RgpdRequestStatus.COMPLETED.value
         model.processed_at = now.replace(tzinfo=None)
