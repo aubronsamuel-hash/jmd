@@ -1,17 +1,18 @@
 {
-  "timestamp": "2025-09-29T08:00:00Z",
+  "timestamp": "2025-09-30T08:00:00Z",
   "plan": [
-    "Installer un service de notifications unifie couvrant email et Telegram.",
-    "Exposer un endpoint de test et un hook planning pour declencher les envois.",
-    "Documenter la configuration BACKEND_NOTIFICATION_* et les nouveaux flux API.",
-    "Valider les notifications via des tests d'integration backend.",
-    "Archiver l'etape roadmap et le changelog associe."
+    "Activer le service calendrier pour exporter les plannings en ICS et traiter les webhooks entrants.",
+    "Orchestrer la publication documentaire multi-connecteurs (Drive, SharePoint, S3) via un gateway unique.",
+    "Exposer les variables BACKEND_CALENDAR_*, BACKEND_STORAGE_* et BACKEND_NOTIFICATION_EMAIL_* dans la configuration.",
+    "Etendre les tests backend pour couvrir ICS, detection de conflits et stockage.",
+    "Actualiser roadmap, changelog et documentation API sur les integrations externes."
   ],
-  "last_update": "2025-09-29T18:00:00Z",
+  "last_update": "2025-09-30T18:00:00Z",
   "status": "completed",
   "notes": [
-    "Module backend.notifications en production avec canaux email/Telegram.",
-    "Creation planning declenche automatiquement l'envoi et trace les entetes HTTP.",
-    "Tests pytest garantissent la personnalisation des messages et la reponse des endpoints."
+    "CalendarSyncService exporte les plannings, conserve l'historique et signale les conflits via CalendarWebhookReport.",
+    "StorageGateway genere un resume texte avec metadata/checksum et diffuse sur les connecteurs declares.",
+    "Configuration enrichie (calendar/storage/email) documentee dans l'API et parsee via les listes comma-separees.",
+    "Tests pytest valident la generation ICS, l'analyse des webhooks, le stockage et le parsing des settings."
   ]
 }

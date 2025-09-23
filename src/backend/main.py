@@ -28,6 +28,14 @@ from .domain import (
     list_plannings,
     update_artist,
 )
+from .integrations import (
+    CalendarSyncError,
+    CalendarSyncService,
+    InMemoryCalendarConnector,
+    InMemoryStorageConnector,
+    StorageError,
+    StorageGateway,
+)
 from .notifications import (
     EmailNotificationChannel,
     NotificationDeliveryError,
@@ -111,6 +119,21 @@ def create_app() -> FastAPI:
         channels=[email_channel, telegram_channel]
     )
     app.state.notification_service = notification_service
+    calendar_connectors = [
+        InMemoryCalendarConnector(name=name)
+        for name in settings.calendar_connectors
+    ]
+    calendar_service = CalendarSyncService(
+        connectors=calendar_connectors,
+        calendar_name=settings.calendar_name,
+    )
+    app.state.calendar_service = calendar_service
+    storage_connectors = [
+        InMemoryStorageConnector(name=name)
+        for name in settings.storage_connectors
+    ]
+    storage_gateway = StorageGateway(connectors=storage_connectors)
+    app.state.storage_gateway = storage_gateway
 
     @app.post(
         f"{settings.api_prefix}/artists",
@@ -230,6 +253,26 @@ def create_app() -> FastAPI:
             )
         else:
             response.headers["X-Notification-Channels"] = ",".join(report.channels)
+        try:
+            calendar_service.synchronize_planning(
+                planning=planning_response, artists=payload.artists
+            )
+        except CalendarSyncError as exc:  # pragma: no cover - defensive branch
+            response.headers["X-Calendar-Error"] = ",".join(exc.errors.keys())
+        else:
+            response.headers["X-Calendar-Targets"] = ",".join(
+                connector.name for connector in calendar_service.connectors
+            )
+        try:
+            storage_results = storage_gateway.publish_planning_document(
+                planning=planning_response, artists=payload.artists
+            )
+        except StorageError as exc:  # pragma: no cover - defensive branch
+            response.headers["X-Storage-Error"] = ",".join(exc.errors.keys())
+        else:
+            response.headers["X-Storage-Targets"] = ",".join(
+                dict.fromkeys(result.connector for result in storage_results)
+            )
         return planning_response
 
     @app.get(

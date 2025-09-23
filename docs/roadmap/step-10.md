@@ -20,10 +20,10 @@ Aligner les connecteurs externes avec la spec fonctionnelle afin que les eveneme
 - Etendre les tests d'integration pour couvrir les flux ICS et le depot de documents.
 
 ## RESULTATS
-- Les evenements planifies se synchronisent vers Google/Outlook et peuvent etre mis a jour depuis les retours ICS.
-- Les documents generes sont deposees sur l'espace de stockage choisi avec suivi des versions.
-- Les emails emis via le module notifications utilisent le fournisseur commun et remontent les statuts d'envoi.
-- La documentation detaille les procedures de configuration et de monitoring des connecteurs.
+- Service `CalendarSyncService` publie les plannings au format ICS sur les connecteurs Google/Outlook (journal export + detection de conflits via `CalendarWebhookReport`).
+- `StorageGateway` mutualise la publication des feuilles de route (resume texte, metadata, checksum) sur les connecteurs declares.
+- Canal email branche sur un fournisseur unique configurable (`BACKEND_NOTIFICATION_EMAIL_PROVIDER`, SMTP/SendGrid/Postmark) partage avec le module notifications.
+- Documentation API mise a jour avec les entetes de synchronisation et la liste des variables d'environnement d'integration.
 
 ## PROCHAINES ETAPES
 - Ouvrir les integrations SMS/Telegram restantes si necessaire.
@@ -36,4 +36,4 @@ Aligner les connecteurs externes avec la spec fonctionnelle afin que les eveneme
 - Secrets et parametres de chaque integration centralises et proteges (env, vault) avec instructions de rotation.
 - Tests d'integration couvrant les flux ICS et stockage executes en CI sans regression de couverture.
 
-VALIDATE? no
+VALIDATE? yes

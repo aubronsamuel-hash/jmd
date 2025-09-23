@@ -127,7 +127,16 @@ Reponse (201 Created):
 }
 ```
 
-Ces exemples servent de base pour constituer des jeux de donnees de demonstration et pour alimenter les tests d'integration sur SQLite en memoire.
+  Ces exemples servent de base pour constituer des jeux de donnees de demonstration et pour alimenter les tests d'integration sur SQLite en memoire.
+
+#### Entetes de synchronisation
+
+Chaque creation de planning declenche la synchronisation externe et ajoute des entetes HTTP:
+
+- `X-Notification-Channels`: canaux de notification utilises (email, telegram, ...).
+- `X-Calendar-Targets`: connecteurs calendrier ayant recu le flux ICS (ex: `google,outlook`).
+- `X-Storage-Targets`: connecteurs de stockage ayant archive le document (ex: `memory`).
+- `X-Calendar-Error` / `X-Storage-Error`: liste des connecteurs en erreur lorsque present.
 
 ## Notifications
 
@@ -173,3 +182,30 @@ Reponse (200 OK):
   }
 }
 ```
+
+## Integrations externes
+
+### Calendriers (Google / Outlook)
+
+- Flux ICS publie automatiquement via `CalendarSyncService` pour chaque planning.
+- Journalisation des payloads exportes et des webhooks entrants (`CalendarWebhookReport`).
+- Detection des conflits de creneaux lors de l'import ICS (chevauchements d'evenements).
+- Variables d'environnement clefs:
+  - `BACKEND_CALENDAR_CONNECTORS`: liste des connecteurs actifs (`google,outlook` par defaut).
+  - `BACKEND_CALENDAR_NAME`: libelle du calendrier genere.
+  - `BACKEND_CALENDAR_WEBHOOK_SECRET`, `BACKEND_CALENDAR_GOOGLE_WEBHOOK_TOKEN`, `BACKEND_CALENDAR_OUTLOOK_WEBHOOK_TOKEN`.
+
+### Stockage documentaire (Google Drive, SharePoint, S3)
+
+- Generation d'un resume texte du planning (nommage `planning-YYYY-MM-DD-<uuid>.txt`).
+- Publication multi-connecteurs via `StorageGateway` (memoire par defaut, extensible).
+- Metadata exposees: `planning_id`, `event_date`, `assignment_count`.
+- Variables d'environnement clefs:
+  - `BACKEND_STORAGE_CONNECTORS`: liste des connecteurs actifs (`memory` par defaut).
+  - `BACKEND_STORAGE_BUCKET`, `BACKEND_STORAGE_GOOGLE_DRIVE_FOLDER`, `BACKEND_STORAGE_SHAREPOINT_SITE`, `BACKEND_STORAGE_SHAREPOINT_LIBRARY`, `BACKEND_STORAGE_S3_BUCKET`, `BACKEND_STORAGE_S3_REGION`.
+
+### Fournisseur email
+
+Les envois sont centralises via un fournisseur declare dans `BACKEND_NOTIFICATION_EMAIL_PROVIDER` (SMTP par defaut).
+Les parametres `BACKEND_NOTIFICATION_EMAIL_SMTP_HOST`, `BACKEND_NOTIFICATION_EMAIL_SMTP_PORT` et `BACKEND_NOTIFICATION_EMAIL_API_KEY`
+permettent d'aligner la configuration avec l'infrastructure d'envoi (SendGrid/Postmark).

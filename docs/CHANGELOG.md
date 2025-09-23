@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025-09-30
+- Synchronisation calendrier via module `backend.integrations.calendar` (exports ICS, webhooks, detection de conflits).
+- Passage d'un gateway de stockage documentaire mutualise (`backend.integrations.storage`) pour archiver les plannings.
+- Nouveaux parametres BACKEND_* exposes pour calendriers, stockage et fournisseur email.
+- Documentation API enrichie sur les entetes de synchronisation et la configuration des connecteurs.
+- Ref: docs/roadmap/step-10.md
+
 ## 2025-09-29
 - Mise en place du module `backend.notifications` et parametrage email/Telegram.
 - Envoi automatique lors de la creation de planning et endpoints de declenchement (`/notifications/test`, `/notifications/plannings/{id}/events`).
