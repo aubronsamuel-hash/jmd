@@ -14,8 +14,20 @@ from backend.models import Availability as AvailabilityModel
 from backend.models import Planning as PlanningModel
 from backend.models import PlanningAssignment as PlanningAssignmentModel
 
-from .artists import Artist, Availability
+from .artists import Artist, ArtistCreate, ArtistUpdate, Availability
 from .planning import PlanningAssignment, PlanningCreate, PlanningResponse
+
+
+class ArtistError(Exception):
+    """Base error for artist related operations."""
+
+
+class ArtistNotFoundError(ArtistError):
+    """Raised when attempting to access an artist that does not exist."""
+
+
+class ArtistConflictError(ArtistError):
+    """Raised when trying to create an artist with conflicting information."""
 
 
 class PlanningError(Exception):
@@ -24,6 +36,49 @@ class PlanningError(Exception):
 
 class PlanningNotFoundError(PlanningError):
     """Raised when attempting to access a planning that does not exist."""
+
+
+def _to_artist_schema(artist: ArtistModel) -> Artist:
+    """Map an ORM artist model to its API representation."""
+
+    ordered_slots = sorted(artist.availabilities, key=lambda slot: slot.start)
+    return Artist(
+        id=artist.id,
+        name=artist.name,
+        availabilities=[
+            Availability(start=slot.start, end=slot.end) for slot in ordered_slots
+        ],
+    )
+
+
+def _load_artist(session: Session, artist_id: UUID) -> ArtistModel:
+    """Load an artist along with its availabilities or raise if missing."""
+
+    stmt = (
+        select(ArtistModel)
+        .options(joinedload(ArtistModel.availabilities))
+        .where(ArtistModel.id == artist_id)
+    )
+    artist = session.execute(stmt).unique().scalar_one_or_none()
+    if artist is None:
+        raise ArtistNotFoundError(f"Artist {artist_id} not found")
+    return artist
+
+
+def _replace_availabilities(
+    session: Session, artist: ArtistModel, availabilities: Iterable[Availability]
+) -> None:
+    """Replace the set of availabilities linked to an artist."""
+
+    deduplicated = list({(slot.start, slot.end): slot for slot in availabilities}.values())
+    artist.availabilities.clear()
+    session.flush()
+
+    for slot in deduplicated:
+        artist.availabilities.append(
+            AvailabilityModel(start=slot.start, end=slot.end)
+        )
+    session.flush()
 
 
 def _select_slot_for_artist(artist: Artist, event_date: date) -> Availability | None:
@@ -84,6 +139,60 @@ def _find_availability(
         session.add(availability)
         session.flush()
     return availability
+
+
+def create_artist(session: Session, payload: ArtistCreate) -> Artist:
+    """Persist a new artist and return its representation."""
+
+    artist_id = payload.id or uuid4()
+    if session.get(ArtistModel, artist_id) is not None:
+        raise ArtistConflictError(f"Artist {artist_id} already exists")
+
+    artist = ArtistModel(id=artist_id, name=payload.name)
+    session.add(artist)
+    session.flush()
+    _replace_availabilities(session, artist, payload.availabilities)
+    session.commit()
+    loaded = _load_artist(session, artist_id)
+    return _to_artist_schema(loaded)
+
+
+def list_artists(session: Session) -> List[Artist]:
+    """Return the collection of persisted artists ordered by name."""
+
+    stmt = select(ArtistModel).options(joinedload(ArtistModel.availabilities)).order_by(
+        ArtistModel.name
+    )
+    artists = session.execute(stmt).unique().scalars().all()
+    return [_to_artist_schema(artist) for artist in artists]
+
+
+def get_artist(session: Session, artist_id: UUID) -> Artist:
+    """Return a single artist from its identifier."""
+
+    artist = _load_artist(session, artist_id)
+    return _to_artist_schema(artist)
+
+
+def update_artist(session: Session, artist_id: UUID, payload: ArtistUpdate) -> Artist:
+    """Update an existing artist and return the refreshed representation."""
+
+    artist = _load_artist(session, artist_id)
+    artist.name = payload.name
+    _replace_availabilities(session, artist, payload.availabilities)
+    session.commit()
+    refreshed = _load_artist(session, artist_id)
+    return _to_artist_schema(refreshed)
+
+
+def delete_artist(session: Session, artist_id: UUID) -> None:
+    """Delete an artist and its availabilities from persistence."""
+
+    artist = session.get(ArtistModel, artist_id)
+    if artist is None:
+        raise ArtistNotFoundError(f"Artist {artist_id} not found")
+    session.delete(artist)
+    session.commit()
 
 
 def _load_planning(session: Session, planning_id: UUID) -> PlanningModel:
@@ -187,6 +296,14 @@ def get_planning(session: Session, planning_id: UUID) -> PlanningResponse:
 
 
 __all__ = [
+    "ArtistError",
+    "ArtistNotFoundError",
+    "ArtistConflictError",
+    "create_artist",
+    "list_artists",
+    "get_artist",
+    "update_artist",
+    "delete_artist",
     "PlanningError",
     "PlanningNotFoundError",
     "create_planning",

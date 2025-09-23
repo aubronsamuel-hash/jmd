@@ -5,19 +5,29 @@ from __future__ import annotations
 from typing import Iterator
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Response, status
 from sqlalchemy.orm import Session, sessionmaker
 
 from .config import get_settings
 from .db import create_engine_from_settings, create_session_factory, run_migrations
 from .domain import (
+    Artist,
+    ArtistConflictError,
+    ArtistCreate,
+    ArtistNotFoundError,
+    ArtistUpdate,
     PlanningCreate,
     PlanningError,
     PlanningNotFoundError,
     PlanningResponse,
+    create_artist,
     create_planning,
+    delete_artist,
+    get_artist,
     get_planning,
+    list_artists,
     list_plannings,
+    update_artist,
 )
 
 SessionFactory = sessionmaker[Session]
@@ -49,6 +59,83 @@ def create_app() -> FastAPI:
     app = FastAPI(title=settings.app_name)
     app.state.db_engine = engine
     app.state.db_session_factory = session_factory
+
+    @app.post(
+        f"{settings.api_prefix}/artists",
+        response_model=Artist,
+        status_code=status.HTTP_201_CREATED,
+        tags=["artists"],
+    )
+    async def post_artist(
+        payload: ArtistCreate, session: Session = Depends(_session_dependency)
+    ) -> Artist:
+        """Create a new artist and persist its availabilities."""
+
+        try:
+            return create_artist(session=session, payload=payload)
+        except ArtistConflictError as exc:
+            session.rollback()
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+
+    @app.get(
+        f"{settings.api_prefix}/artists",
+        response_model=list[Artist],
+        tags=["artists"],
+    )
+    async def list_artist_items(
+        session: Session = Depends(_session_dependency),
+    ) -> list[Artist]:
+        """Return all persisted artists ordered by name."""
+
+        return list_artists(session=session)
+
+    @app.get(
+        f"{settings.api_prefix}/artists/{{artist_id}}",
+        response_model=Artist,
+        tags=["artists"],
+    )
+    async def get_artist_item(
+        artist_id: UUID, session: Session = Depends(_session_dependency)
+    ) -> Artist:
+        """Return a single artist by identifier."""
+
+        try:
+            return get_artist(session=session, artist_id=artist_id)
+        except ArtistNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    @app.put(
+        f"{settings.api_prefix}/artists/{{artist_id}}",
+        response_model=Artist,
+        tags=["artists"],
+    )
+    async def put_artist_item(
+        artist_id: UUID,
+        payload: ArtistUpdate,
+        session: Session = Depends(_session_dependency),
+    ) -> Artist:
+        """Update an existing artist and replace its availabilities."""
+
+        try:
+            return update_artist(session=session, artist_id=artist_id, payload=payload)
+        except ArtistNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+
+    @app.delete(
+        f"{settings.api_prefix}/artists/{{artist_id}}",
+        status_code=status.HTTP_204_NO_CONTENT,
+        tags=["artists"],
+    )
+    async def delete_artist_item(
+        artist_id: UUID, session: Session = Depends(_session_dependency)
+    ) -> Response:
+        """Remove an artist and its availabilities from persistence."""
+
+        try:
+            delete_artist(session=session, artist_id=artist_id)
+        except ArtistNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
     @app.get(f"{settings.api_prefix}/health", tags=["health"])
     async def healthcheck() -> dict[str, str]:

@@ -29,8 +29,8 @@ Ouvrir l'API a la gestion complete des artistes en permettant la creation, la mi
 - Archivage d'exemples de payloads artistes/planning dans `docs/` pour reference produit.
 
 ## RESULTS
-- API FastAPI expose des operations completes pour la gestion des artistes et disponibilites.
-- Les routes planning reutilisent la persistence artistes sans duplication de donnees.
-- Suite de tests enrichie validant les scenarios CRUD et la generation de planning.
+- API FastAPI expose le CRUD complet `/api/v1/artists` avec validations et erreurs 404/409.
+- Contrainte d'unicite Alembic sur les disponibilites et services domaine mutualises pour planning/artistes.
+- Tests pytest sur SQLite en memoire couvrant les scenarios CRUD artistes et les plannings.
 
-VALIDATE? no
+VALIDATE? yes

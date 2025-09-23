@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025-09-28
+- CRUD complet des artistes expose via FastAPI (routes `/api/v1/artists`).
+- Synchronisation des services domaine, schemas Pydantic et contraintes Alembic pour les disponibilites.
+- Documentation API et tests d'integration enrichis autour de SQLite en memoire.
+- Ref: docs/roadmap/step-08.md
+
 ## 2025-09-27
 - Ajout de la persistence SQLAlchemy avec models `backend.models` et configuration `backend.db`.
 - Creation des migrations Alembic initiales et documentation des commandes d'execution.
