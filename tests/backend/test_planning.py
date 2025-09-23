@@ -61,6 +61,9 @@ async def test_create_planning_returns_assignments(async_client) -> None:
     assert second_assignment["artist_id"] == artist_two_id
     assert second_assignment["slot"]["start"].startswith(event_date.date().isoformat())
 
+    assert response.headers["X-Calendar-Targets"] == "google,outlook"
+    assert response.headers["X-Storage-Targets"] == "memory"
+
     list_response = await async_client.get("/api/v1/plannings")
     assert list_response.status_code == 200
     listed = list_response.json()
