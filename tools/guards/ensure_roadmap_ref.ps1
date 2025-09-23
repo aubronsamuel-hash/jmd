@@ -77,6 +77,21 @@ function Get-PrContext {
   }
 }
 
+function Resolve-StepPathFromRoadmap {
+  $roadmapReadme = Join-Path 'docs' 'roadmap' 'README.md'
+  if (-not (Test-Path $roadmapReadme)) { return $null }
+  try {
+    $content = Get-Content $roadmapReadme -Raw
+  } catch {
+    return $null
+  }
+  $match = [regex]::Match($content, 'step-([0-9]{2})\.md')
+  if ($match.Success -and $match.Value) {
+    return "docs/roadmap/$($match.Value)"
+  }
+  return $null
+}
+
 $prContext = Get-PrContext
 if (-not $StepPath -and $prContext -and $prContext.Body) {
   $match = [regex]::Match($prContext.Body, $refPattern)
@@ -100,6 +115,14 @@ if (-not $StepPath) {
 if (-not $StepPath -and $env:ROADMAP_STEP_PATH) {
   $StepPath = $env:ROADMAP_STEP_PATH
   Write-Info "Detected StepPath from env var: $StepPath"
+}
+
+if (-not $StepPath) {
+  $resolved = Resolve-StepPathFromRoadmap
+  if ($resolved) {
+    $StepPath = $resolved
+    Write-Info "Detected StepPath from docs/roadmap/README.md: $StepPath"
+  }
 }
 
 if (-not $StepPath) {
