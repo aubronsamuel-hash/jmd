@@ -1,3 +1,6 @@
+SUT: docs/specs/spec-fonctionnelle-v0.1.md
+Les schemas, services et regles metier doivent respecter les modules et workflows de la spec.
+
 # AGENT backend
 
 ## Objectifs

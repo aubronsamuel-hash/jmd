@@ -1,3 +1,6 @@
+SUT: docs/specs/spec-fonctionnelle-v0.1.md
+Tous les documents generes doivent rester alignes avec la spec.
+
 # AGENT docs
 
 ## Objectifs
