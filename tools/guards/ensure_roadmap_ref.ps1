@@ -17,6 +17,20 @@ $gh = Get-Command gh -ErrorAction SilentlyContinue
 $commitMessage = ''
 $gitMessageLoaded = $false
 
+function Invoke-RoadmapRefEmptyCommit {
+  param([string]$RefLine)
+
+  $message = "chore(ci): ensure roadmap reference`n`n$RefLine"
+  $args = @(
+    '-c', 'user.name=roadmap-guard',
+    '-c', 'user.email=roadmap-guard@users.noreply.github.com',
+    '-c', 'commit.gpgsign=false',
+    'commit', '--allow-empty', '-m', $message
+  )
+
+  & git @args | Out-Null
+}
+
 if ($StepPath) {
   $StepPath = $StepPath.Trim()
   if ($StepPath) {
@@ -173,7 +187,7 @@ if ($prContext) {
       $message = Get-CommitMessage
       if (-not ($message -and $message.Contains($refLine))) {
         Write-Info 'Creating empty commit with roadmap ref...'
-        git commit --allow-empty -m "chore(ci): ensure roadmap reference`n`n$refLine" | Out-Null
+        Invoke-RoadmapRefEmptyCommit -RefLine $refLine
       } else {
         Write-Info 'Latest commit already contains roadmap ref. No action required.'
       }
@@ -185,6 +199,6 @@ if ($prContext) {
     Write-Info 'Latest commit already contains roadmap ref.'
   } else {
     Write-Info 'Creating empty commit with roadmap ref...'
-    git commit --allow-empty -m "chore(ci): ensure roadmap reference`n`n$refLine" | Out-Null
+    Invoke-RoadmapRefEmptyCommit -RefLine $refLine
   }
 }
