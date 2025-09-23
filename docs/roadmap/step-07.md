@@ -35,4 +35,4 @@ Introduire une couche de persistence relationnelle pour les artistes et planning
 - Endpoints REST exposes pour consulter les plannings (`GET /plannings`, `GET /plannings/{id}`).
 - Tests pytest sur SQLite en memoire couvrant creation et lecture des plannings.
 
-VALIDATE? yes
+VALIDATE? yes/no

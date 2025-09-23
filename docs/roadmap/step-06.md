@@ -34,4 +34,4 @@ Initier l'architecture backend du SaaS de planning en livrant un service FastAPI
 - Suite de tests asynchrones (`pytest`, `httpx.AsyncClient`) assurant la couverture minimale et generation de `coverage.xml`.
 - Documentation (README, AGENT backend) et changelog synchronises avec la roadmap.
 
-VALIDATE? yes
+VALIDATE? yes/no
