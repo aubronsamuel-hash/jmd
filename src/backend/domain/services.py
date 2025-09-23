@@ -15,6 +15,8 @@ from backend.models import Planning as PlanningModel
 from backend.models import PlanningAssignment as PlanningAssignmentModel
 
 from .artists import Artist, ArtistCreate, ArtistUpdate, Availability
+from backend.observability import get_metrics, trace
+
 from .planning import PlanningAssignment, PlanningCreate, PlanningResponse
 
 
@@ -240,36 +242,52 @@ def _to_planning_response(planning: PlanningModel) -> PlanningResponse:
 def create_planning(session: Session, payload: PlanningCreate) -> PlanningResponse:
     """Generate and persist a planning for the provided payload."""
 
+    metrics = get_metrics()
+    event_label = payload.event_date.isoformat()
     assignments: List[PlanningAssignment] = []
-    for artist_schema in payload.artists:
-        slot = _select_slot_for_artist(artist_schema, payload.event_date)
-        if slot is None:
-            raise PlanningError(
-                f"Artist '{artist_schema.name}' has no availability for "
-                f"{payload.event_date.isoformat()}"
+    response: PlanningResponse | None = None
+    with trace("domain.planning.create", event_date=event_label) as span:
+        for artist_schema in payload.artists:
+            slot = _select_slot_for_artist(artist_schema, payload.event_date)
+            if slot is None:
+                raise PlanningError(
+                    f"Artist '{artist_schema.name}' has no availability for "
+                    f"{payload.event_date.isoformat()}"
+                )
+            assignments.append(PlanningAssignment(artist_id=artist_schema.id, slot=slot))
+
+        for artist_schema in payload.artists:
+            artist_model = _upsert_artist(session, artist_schema)
+            _sync_availabilities(session, artist_model, artist_schema.availabilities)
+
+        planning_model = PlanningModel(id=uuid4(), event_date=payload.event_date)
+        session.add(planning_model)
+        session.flush()
+
+        for assignment in assignments:
+            availability_model = _find_availability(session, assignment.artist_id, assignment.slot)
+            planning_model.assignments.append(
+                PlanningAssignmentModel(
+                    artist_id=assignment.artist_id,
+                    availability_id=availability_model.id,
+                )
             )
-        assignments.append(PlanningAssignment(artist_id=artist_schema.id, slot=slot))
 
-    for artist_schema in payload.artists:
-        artist_model = _upsert_artist(session, artist_schema)
-        _sync_availabilities(session, artist_model, artist_schema.availabilities)
-
-    planning_model = PlanningModel(id=uuid4(), event_date=payload.event_date)
-    session.add(planning_model)
-    session.flush()
-
-    for assignment in assignments:
-        availability_model = _find_availability(session, assignment.artist_id, assignment.slot)
-        planning_model.assignments.append(
-            PlanningAssignmentModel(
-                artist_id=assignment.artist_id,
-                availability_id=availability_model.id,
-            )
-        )
-
-    session.commit()
-    persisted = _load_planning(session, planning_model.id)
-    return _to_planning_response(persisted)
+        session.commit()
+        persisted = _load_planning(session, planning_model.id)
+        response = _to_planning_response(persisted)
+        span.set_attribute("assignment.count", len(response.assignments))
+    assert response is not None  # pragma: no cover - defensive guard
+    metrics.increment(
+        "planning_generated_total",
+        labels={"event_date": event_label, "artists": str(len(payload.artists))},
+    )
+    metrics.observe(
+        "planning_assignments_per_event",
+        len(assignments),
+        labels={"event_date": event_label},
+    )
+    return response
 
 
 def list_plannings(session: Session) -> List[PlanningResponse]:

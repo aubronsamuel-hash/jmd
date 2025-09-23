@@ -8,6 +8,7 @@ from typing import Dict, Iterable, List, Mapping, MutableMapping, Sequence
 
 from backend.domain.artists import Artist
 from backend.domain.planning import PlanningAssignment, PlanningResponse
+from backend.observability import get_metrics, trace
 
 
 @dataclass(slots=True)
@@ -111,20 +112,42 @@ class CalendarSyncService:
     ) -> str:
         """Build ICS payloads for a planning and publish them."""
 
+        metrics = get_metrics()
         events = self._build_events(planning, artists or [])
         ics_payload = _export_ics(events, calendar_name=self._calendar_name)
         errors: MutableMapping[str, str] = {}
+        delay_seconds = _compute_delay_seconds(events)
 
-        for connector in self._connectors:
-            try:
-                connector.publish(ics_payload)
-            except Exception as exc:  # pragma: no cover - defensive logging
-                errors[connector.name] = str(exc)
-            else:
-                self._exports.append((connector.name, ics_payload))
-
-        if errors:
-            raise CalendarSyncError(errors)
+        with trace(
+            "calendar.synchronize", calendar=self._calendar_name, planning_id=str(planning.planning_id)
+        ) as span:
+            span.set_attribute("event.count", len(events))
+            for connector in self._connectors:
+                with trace("calendar.connector.publish", connector=connector.name):
+                    try:
+                        connector.publish(ics_payload)
+                    except Exception as exc:  # pragma: no cover - defensive logging
+                        errors[connector.name] = str(exc)
+                    else:
+                        self._exports.append((connector.name, ics_payload))
+                        metrics.increment(
+                            "calendar_sync_exports_total",
+                            labels={"connector": connector.name},
+                        )
+                        metrics.observe(
+                            "calendar_sync_delay_seconds",
+                            delay_seconds,
+                            labels={"connector": connector.name},
+                        )
+            pending = float(len(errors))
+            metrics.set_gauge(
+                "calendar_sync_pending_exports",
+                pending,
+                labels={"calendar": self._calendar_name},
+            )
+            if errors:
+                span.set_attribute("pending.exports", pending)
+                raise CalendarSyncError(errors)
 
         return ics_payload
 
@@ -201,6 +224,22 @@ def _export_ics(events: Sequence[CalendarEvent], *, calendar_name: str) -> str:
         lines.extend(_event_to_ics_lines(event))
     lines.append("END:VCALENDAR")
     return "\r\n".join(lines) + "\r\n"
+
+
+def _compute_delay_seconds(events: Sequence[CalendarEvent]) -> float:
+    """Return the time delta between now and the earliest event start."""
+
+    if not events:
+        return 0.0
+    reference = datetime.now(events[0].start.tzinfo) if events[0].start.tzinfo else datetime.now()
+    earliest = min(event.start for event in events)
+    try:
+        delta = reference - earliest
+    except TypeError:
+        normalized_reference = reference.replace(tzinfo=None) if reference.tzinfo else reference
+        normalized_earliest = earliest.replace(tzinfo=None) if earliest.tzinfo else earliest
+        delta = normalized_reference - normalized_earliest
+    return max(0.0, delta.total_seconds())
 
 
 def _event_to_ics_lines(event: CalendarEvent) -> list[str]:

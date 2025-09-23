@@ -14,6 +14,7 @@ from fastapi import (
     Response,
     status,
 )
+from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -73,6 +74,7 @@ from .notifications import (
     NotificationService,
     TelegramNotificationChannel,
 )
+from .observability import bind_components, setup_observability, update_attributes
 
 
 class NotificationDispatchResponse(BaseModel):
@@ -158,8 +160,13 @@ def create_app() -> FastAPI:
     _session_factory = session_factory
 
     app = FastAPI(title=settings.app_name)
+    observability = setup_observability(app, settings)
+    bind_components(observability)
     app.state.db_engine = engine
     app.state.db_session_factory = session_factory
+    app.state.tracer = observability.tracer
+    app.state.metrics = observability.metrics
+    app.state.alerting_service = observability.alerting
     email_channel = EmailNotificationChannel(
         sender=settings.notification_email_sender,
         recipients=settings.notification_email_recipients,
@@ -322,6 +329,16 @@ def create_app() -> FastAPI:
             "service": settings.app_name,
         }
 
+    @app.get(settings.metrics_endpoint, include_in_schema=False)
+    async def metrics_endpoint() -> PlainTextResponse:
+        """Expose Prometheus metrics collected by the service."""
+
+        content = observability.metrics.render_prometheus()
+        return PlainTextResponse(
+            content,
+            media_type="text/plain; version=0.0.4; charset=utf-8",
+        )
+
     @app.post(
         f"{settings.api_prefix}/plannings",
         response_model=PlanningResponse,
@@ -341,6 +358,7 @@ def create_app() -> FastAPI:
         except PlanningError as exc:
             session.rollback()
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        update_attributes(planning_id=str(planning_response.planning_id))
         audit_service.log_event(
             session=session,
             event_type=AuditEventType.PLANNING_CREATED,

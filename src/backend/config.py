@@ -116,6 +116,18 @@ class Settings(BaseSettings):
         default=30,
         alias="BACKEND_AUDIT_RGPD_SLA_DAYS",
     )
+    metrics_endpoint: str = Field(
+        default="/metrics",
+        alias="BACKEND_METRICS_ENDPOINT",
+    )
+    observability_latency_threshold_ms: float = Field(
+        default=200.0,
+        alias="BACKEND_OBSERVABILITY_LATENCY_MS",
+    )
+    observability_queue_threshold: int = Field(
+        default=1,
+        alias="BACKEND_OBSERVABILITY_QUEUE_THRESHOLD",
+    )
 
     model_config = {"env_file": ".env", "extra": "ignore", "populate_by_name": True}
 
