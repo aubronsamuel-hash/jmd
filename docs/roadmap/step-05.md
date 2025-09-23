@@ -27,4 +27,4 @@ Rendre la detection de l'etape roadmap generique et assurer la configuration pnp
 - Template roadmap pret pour les futures etapes.
 - Historisation de l'etape 04 dans `docs/roadmap/README.md`.
 
-VALIDATE? yes/no
+VALIDATE? yes
