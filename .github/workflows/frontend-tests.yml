@@ -46,6 +46,8 @@ jobs:
           node-version: 20
           cache: pnpm
           cache-dependency-path: ${{ steps.detect_pnpm.outputs.lock-path }}
+      - name: Install pnpm
+        run: npm install -g pnpm
       - name: Set up pnpm
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         uses: pnpm/action-setup@v4
