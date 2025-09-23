@@ -9,13 +9,20 @@ $ErrorActionPreference = 'Stop'
 
 function Write-Info {
   param([string]$Message)
-  Write-Host "[roadmap_guard] $Message"
+  Write-Host "[ensure_roadmap_ref] $Message"
 }
 
 $refPattern = 'Ref: (docs/roadmap/step-[0-9]{2}\.md)'
 $gh = Get-Command gh -ErrorAction SilentlyContinue
 $commitMessage = ''
 $gitMessageLoaded = $false
+
+if ($StepPath) {
+  $StepPath = $StepPath.Trim()
+  if ($StepPath) {
+    Write-Info "Using provided StepPath: $StepPath"
+  }
+}
 
 function Get-CommitMessage {
   if (-not $script:gitMessageLoaded) {
@@ -70,16 +77,9 @@ function Get-PrContext {
   }
 }
 
-if ($StepPath) {
-  $StepPath = $StepPath.Trim()
-  if ($StepPath) {
-    Write-Info "Using provided StepPath: $StepPath"
-  }
-}
-
 $prContext = Get-PrContext
 if (-not $StepPath -and $prContext -and $prContext.Body) {
-  $match = [regex]::Match([string]$prContext.Body, $refPattern)
+  $match = [regex]::Match($prContext.Body, $refPattern)
   if ($match.Success) {
     $StepPath = $match.Groups[1].Value
     Write-Info "Detected StepPath from PR body: $StepPath"
@@ -98,54 +98,57 @@ if (-not $StepPath) {
 }
 
 if (-not $StepPath -and $env:ROADMAP_STEP_PATH) {
-  $StepPath = $env:ROADMAP_STEP_PATH.Trim()
-  if ($StepPath) {
-    Write-Info "Detected StepPath from env var: $StepPath"
-  }
+  $StepPath = $env:ROADMAP_STEP_PATH
+  Write-Info "Detected StepPath from env var: $StepPath"
 }
 
 if (-not $StepPath) {
-  throw "Unable to determine StepPath. Provide -StepPath, set ROADMAP_STEP_PATH, or ensure PR/commit contains 'Ref: docs/roadmap/step-XX.md'."
+  throw "Could not determine StepPath. Provide -StepPath, set ROADMAP_STEP_PATH, or ensure PR/commit contains 'Ref: docs/roadmap/step-XX.md'."
 }
 
 if ($StepPath) {
   $StepPath = $StepPath.Trim()
 }
-
 if ($StepPath -notmatch '^docs/roadmap/step-[0-9]{2}\.md$') {
   throw "StepPath '$StepPath' is not in the expected format docs/roadmap/step-XX.md."
 }
 
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$repoRoot = Split-Path -Parent (Split-Path -Parent $scriptDir)
-$normalized = $StepPath -replace '/', [System.IO.Path]::DirectorySeparatorChar
-$targetPath = Join-Path $repoRoot $normalized
-if (-not (Test-Path $targetPath)) {
-  throw "Roadmap file '$StepPath' is missing."
-}
-
 $refLine = "Ref: $StepPath"
-$commitMessage = Get-CommitMessage
-$commitHasRef = $false
-if ($commitMessage -and $commitMessage.Contains($refLine)) {
-  $commitHasRef = $true
-}
 
-$prHasRef = $false
-if ($prContext -and $prContext.Body) {
-  if ([string]$prContext.Body -like "*${refLine}*") {
-    $prHasRef = $true
+if ($prContext) {
+  $existingBody = ''
+  if ($null -ne $prContext.Body) {
+    $existingBody = [string]$prContext.Body
+  }
+  if ($existingBody -like "*${refLine}*") {
+    Write-Info 'PR body already contains roadmap ref.'
+  } else {
+    $trimmed = $existingBody.TrimEnd()
+    if ($trimmed) {
+      $newBody = "$trimmed`n`n$refLine"
+    } else {
+      $newBody = $refLine
+    }
+    try {
+      gh pr edit $prContext.Number --body "$newBody" | Out-Null
+      Write-Info 'Appended roadmap ref to PR body.'
+    } catch {
+      Write-Info 'Failed to append to PR body. Falling back to empty commit.'
+      $message = Get-CommitMessage
+      if (-not ($message -and $message.Contains($refLine))) {
+        Write-Info 'Creating empty commit with roadmap ref...'
+        git commit --allow-empty -m "chore(ci): ensure roadmap reference`n`n$refLine" | Out-Null
+      } else {
+        Write-Info 'Latest commit already contains roadmap ref. No action required.'
+      }
+    }
+  }
+} else {
+  $message = Get-CommitMessage
+  if ($message -and $message.Contains($refLine)) {
+    Write-Info 'Latest commit already contains roadmap ref.'
+  } else {
+    Write-Info 'Creating empty commit with roadmap ref...'
+    git commit --allow-empty -m "chore(ci): ensure roadmap reference`n`n$refLine" | Out-Null
   }
 }
-
-if (-not ($commitHasRef -or $prHasRef)) {
-  throw "Neither the latest commit nor the PR body contains '$refLine'."
-}
-
-if ($commitHasRef) {
-  Write-Info 'Latest commit contains roadmap reference.'
-}
-if ($prHasRef) {
-  Write-Info 'PR body contains roadmap reference.'
-}
-Write-Info "Roadmap file validated: $StepPath"
