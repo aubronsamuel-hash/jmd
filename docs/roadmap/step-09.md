@@ -17,4 +17,11 @@ Les fonctionnalites de planning, disponibilites et feuilles de route sont en pla
 - La configuration est securisee (variables d'environnement, secrets) et documentee pour les environnements.
 - CI/guards executent les tests et verifient la couverture minimale sans regression.
 
-VALIDATE? no
+## RESULTS
+- Service `backend.notifications` compose les messages unifies et pilote les canaux email/Telegram.
+- Creation de planning declenche automatiquement l'envoi et renseigne les entetes de suivi HTTP.
+- Endpoints `/api/v1/notifications/test` et `/api/v1/notifications/plannings/{planning_id}/events` exposes pour tests et jobs externes.
+- Tests backend (`tests/backend/test_notifications.py`) garantissent la personnalisation des messages et la presence des canaux.
+- Documentation mise a jour (README, API backend, agent backend) et roadmap archivee.
+
+VALIDATE? yes

@@ -16,6 +16,22 @@ class Settings(BaseSettings):
         default="sqlite+pysqlite:///./planning.db", alias="BACKEND_DATABASE_URL"
     )
     sqlalchemy_echo: bool = Field(default=False, alias="BACKEND_SQLALCHEMY_ECHO")
+    notification_email_sender: str = Field(
+        default="notifications@example.com",
+        alias="BACKEND_NOTIFICATION_EMAIL_SENDER",
+    )
+    notification_email_recipients: list[str] = Field(
+        default_factory=lambda: ["planning-team@example.com"],
+        alias="BACKEND_NOTIFICATION_EMAIL_RECIPIENTS",
+    )
+    notification_telegram_bot_token: str = Field(
+        default="demo-telegram-token",
+        alias="BACKEND_NOTIFICATION_TELEGRAM_BOT_TOKEN",
+    )
+    notification_telegram_chat_ids: list[str] = Field(
+        default_factory=lambda: ["demo-chat-id"],
+        alias="BACKEND_NOTIFICATION_TELEGRAM_CHAT_IDS",
+    )
 
     model_config = {"env_file": ".env", "extra": "ignore", "populate_by_name": True}
 

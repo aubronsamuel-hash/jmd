@@ -10,7 +10,7 @@
 - `tools/guards/docs_guard.ps1`
 
 ## Roadmap
-- Etape courante: [docs/roadmap/step-08.md](docs/roadmap/step-08.md)
+- Etape courante: [docs/roadmap/step-09.md](docs/roadmap/step-09.md)
 - Sommaire: [docs/roadmap/README.md](docs/roadmap/README.md)
 
 ## Backend FastAPI
@@ -48,8 +48,15 @@ uvicorn backend.main:app --reload
 - `POST /api/v1/plannings` genere un planning a partir des artistes fournis.
 - `GET /api/v1/plannings` liste les plannings persistes.
 - `GET /api/v1/plannings/{planning_id}` retourne un planning par identifiant.
+- `POST /api/v1/notifications/test` verifie la configuration des canaux (email, Telegram).
+- `POST /api/v1/notifications/plannings/{planning_id}/events` declenche un envoi sur un evenement (`planning.assigned`, `planning.updated`, `planning.reminder`).
 
 Des exemples de requetes et reponses JSON sont disponibles dans [docs/backend/api.md](docs/backend/api.md).
+
+### Notifications
+- Parametres environnement: `BACKEND_NOTIFICATION_EMAIL_SENDER`, `BACKEND_NOTIFICATION_EMAIL_RECIPIENTS`, `BACKEND_NOTIFICATION_TELEGRAM_BOT_TOKEN`, `BACKEND_NOTIFICATION_TELEGRAM_CHAT_IDS`.
+- Les notifications planifient un message unifie formate puis distribue sur chaque canal configure.
+- L'envoi est journalise et expose dans les entetes `X-Notification-Channels` ou `X-Notification-Error*` lors de la creation d'un planning.
 
 ### Tests et couverture
 ```bash

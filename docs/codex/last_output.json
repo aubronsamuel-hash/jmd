@@ -1,17 +1,17 @@
 {
-  "timestamp": "2025-09-22T08:00:00Z",
+  "timestamp": "2025-09-29T08:00:00Z",
   "plan": [
-    "Publier la specification fonctionnelle v0.1 dans docs/specs.",
-    "Ajouter la mention SUT aux fichiers agents backend/frontend/devops/docs.",
-    "Creer tools/docs/ensure_spec.ps1 pour injecter la spec et verifier la longueur.",
-    "Renforcer docs_guard pour controler la spec et les agents.",
-    "Mettre a jour la roadmap step-03 et le changelog."
+    "Installer un service de notifications unifie couvrant email et Telegram.",
+    "Exposer un endpoint de test et un hook planning pour declencher les envois.",
+    "Documenter la configuration BACKEND_NOTIFICATION_* et les nouveaux flux API.",
+    "Valider les notifications via des tests d'integration backend.",
+    "Archiver l'etape roadmap et le changelog associe."
   ],
-  "last_update": "2025-09-22T18:00:00Z",
+  "last_update": "2025-09-29T18:00:00Z",
   "status": "completed",
   "notes": [
-    "Spec fonctionnelle v0.1 commitee et referencee par tous les agents.",
-    "Script ensure_spec.ps1 injecte la SUT automatiquement.",
-    "docs_guard valide la presence de la spec et des marqueurs SUT."
+    "Module backend.notifications en production avec canaux email/Telegram.",
+    "Creation planning declenche automatiquement l'envoi et trace les entetes HTTP.",
+    "Tests pytest garantissent la personnalisation des messages et la reponse des endpoints."
   ]
 }
