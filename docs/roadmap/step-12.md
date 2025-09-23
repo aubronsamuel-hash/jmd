@@ -16,27 +16,30 @@ fonctionnelle afin de securiser l exploitation des donnees sensibles.
   des donnees personnelles.
 
 ## ACTIONS
-- Ajouter un service `AuditTrailService` cote backend avec stockage immuable,
-  versionnage des payloads et signature des evenements.
-- Propager des hooks d audit dans les modules planning, paie, materiel,
-  notifications et integrations pour journaliser les actions sensibles et les
-  reponses externes.
-- Mettre en place des jobs de retention configurables par organisation afin de
-  purger, archiver et tracer les demandes RGPD (acces, rectification,
-  effacement) dans un registre dedie.
-- Documenter les exigences de conformite (roles, retention, chiffrement au
-  repos, sauvegardes) et mettre a jour les guards pour verifier la presence du
-  registre d audit.
+- Introduit `backend.domain.audit` avec `AuditTrailService`, enums et schemas
+  Pydantic (journal immuable signe, exports JSON/CSV, registres RGPD).
+- Etendu `backend.main` pour tracer artistes/plannings/notifications, exposer
+  les routes `/api/v1/audit/*` et `/api/v1/rgpd/*`, instancier le service avec
+  la configuration.
+- Ajoute les modeles SQLAlchemy (`audit_logs`, `audit_retention_*`,
+  `rgpd_requests`) et migration `20241002_03_audit_trail`.
+- Rendu la retention parametrable + jobs de purge/archivage, workflow RGPD avec
+  historique et signature HMAC.
+- Nouvelle doc `docs/compliance/audit-register.md`, guard mis a jour, roadmap
+  et changelog synchronises.
 
 ## RESULTATS
-- Journal des actions accessible via API `/api/v1/audit/logs` avec filtres sur
-  la periode, le module et l utilisateur, plus export JSON/CSV horodate.
-- Workflow RGPD formalise (demande, traitement, confirmation) avec traces et SLA
-  documentes pour chaque type de requete.
-- Plans de retention parametres par organisation et executes automatiquement
-  avec notifications aux administrateurs.
-- Documentation et guards valides prouvant la prise en compte des obligations
-  legales et des besoins de tracabilite.
+- `/api/v1/audit/logs` filtre par organisation/module/utilisateur/date et exporte
+  en JSON ou CSV signe (payload Base64 + digest HMAC).
+- `AuditTrailService` journalise artistes, plannings, notifications, stockage,
+  RGPD; les tests `tests/backend/test_audit.py` couvrent creation, export,
+  workflow RGPD et retention.
+- `/api/v1/audit/organizations/{org}/retention` configure, journalise et lance
+  les jobs de purge/archivage; `audit_retention_events` suit les executions.
+- `/api/v1/rgpd/requests` gere creation/completion avec historique dedie et SLA
+  automatique, chaque transition alimente le registre.
+- `docs/compliance/audit-register.md` centralise les exigences et le guard
+  PowerShell verifie sa presence.
 
 ## ACCEPTATION
 - Toute action critique (CRUD donnees sensibles, export, configuration) est
@@ -48,4 +51,4 @@ fonctionnelle afin de securiser l exploitation des donnees sensibles.
 - Les politiques de retention et d archivage sont configurables, documentees et
   testees en CI (jobs de purge, alertes de quotas).
 
-VALIDATE? no
+VALIDATE? yes

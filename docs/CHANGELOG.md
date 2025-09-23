@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025-10-02
+- Mise en place du registre d'audit (`backend.domain.audit`, service HMAC, exports JSON/CSV, endpoints `/api/v1/audit/*`).
+- Journalisation des modules artistes/planning/notifications/storage + workflow RGPD (`/api/v1/rgpd/*`) et politiques de retention configurables.
+- Migration `20241002_03_audit_trail`, nouveaux tests `tests/backend/test_audit.py`, documentation `docs/compliance/audit-register.md`.
+- Ref: docs/roadmap/step-12.md
+
 ## 2025-10-01
 - Entrepot analytics structure (`analytics_mission_events`, `analytics_payroll_records`, `analytics_equipment_incidents`) alimente par les evenements planning/paie/logistique.
 - Service `backend.domain.analytics` et endpoints FastAPI `/api/v1/analytics/dashboard` + `/api/v1/analytics/exports` (KPIs, heatmap, comparatifs, latence < 15 min).
