@@ -1,0 +1,30 @@
+name: Frontend Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - name: Install dependencies
+        if: ${{ hashFiles('package.json') != '' }}
+        run: |
+          corepack enable
+          pnpm install --frozen-lockfile || pnpm install
+      - name: Run vitest
+        if: ${{ hashFiles('package.json') != '' }}
+        run: |
+          corepack enable
+          pnpm test -- --runInBand
+      - name: Skip - no frontend project
+        if: ${{ hashFiles('package.json') == '' }}
+        run: echo 'No package.json detected, skipping frontend tests.'
+

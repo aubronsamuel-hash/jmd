@@ -1,0 +1,36 @@
+name: Backend Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          pip install pytest
+      - name: Run pytest
+        run: |
+          set -e
+          if pytest; then
+            exit 0
+          else
+            status=$?
+            if [ "$status" -eq 5 ]; then
+              echo 'Aucun test collecte (code 5)';
+              exit 0
+            else
+              exit $status
+            fi
+          fi
+
