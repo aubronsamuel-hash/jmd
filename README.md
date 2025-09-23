@@ -10,7 +10,7 @@
 - `tools/guards/docs_guard.ps1`
 
 ## Roadmap
-- Etape courante: [docs/roadmap/step-07.md](docs/roadmap/step-07.md)
+- Etape courante: [docs/roadmap/step-08.md](docs/roadmap/step-08.md)
 - Sommaire: [docs/roadmap/README.md](docs/roadmap/README.md)
 
 ## Backend FastAPI
