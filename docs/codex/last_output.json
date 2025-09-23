@@ -1,17 +1,14 @@
 {
-  "timestamp": "2025-09-25T09:00:00Z",
+  "timestamp": "2025-09-26T09:00:00Z",
   "plan": [
-    "Initialiser un noyau backend FastAPI avec un pyproject et les dependances essentielles (fastapi, uvicorn, pydantic).",
-    "Structurer le package src/backend/app avec un point d'entree main.py, configuration settings et routes de sante/planification.",
-    "Ajouter un premier module de domaine pour la gestion des artistes et disponibilites ainsi que des schemas de transfert de donnees.",
-    "Configurer pytest + coverage, ecrire des tests de fumee (endpoint de sante, creation de planning) et viser >= 70% de couverture.",
-    "Mettre a jour la CI backend (workflow backend-tests) pour installer les dependances projet, lancer pytest et publier les rapports.",
-    "Documenter les commandes de developpement et mettre a jour README, AGENT backend et changelog a la cloture."
+    "Installer SQLAlchemy 2.x et Alembic et configurer backend.db pour la persistence.",
+    "Definir les models persistants (Artist, Availability, Planning, Assignment) et aligner les schemas Pydantic.",
+    "Brancher create_planning sur la couche persistence pour enregistrer et relire les plannings.",
+    "Exposer GET /api/v1/plannings et GET /api/v1/plannings/{planning_id} pour consulter les plannings.",
+    "Ecrire les tests (pytest + SQLite en memoire) couvrant la creation et la lecture de plannings.",
+    "Mettre a jour README, AGENT backend, workflows CI et changelog apres livraison."
   ],
-  "last_update": "2025-09-25T09:00:00Z",
-  "status": "delivered",
-  "notes": [
-    "Backend FastAPI operationnel avec endpoints health/plannings et couverture >= 70 %.",
-    "Workflow CI backend-tests installe le package via pyproject, genere coverage.xml et archive l'artefact."
-  ]
+  "last_update": "2025-09-26T09:00:00Z",
+  "status": "planned",
+  "notes": []
 }
