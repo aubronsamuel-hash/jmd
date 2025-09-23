@@ -28,4 +28,10 @@ Initier l'architecture backend du SaaS de planning en livrant un service FastAPI
 - Mise a jour de `docs/CHANGELOG.md` avec les entrees Step 06.
 - Synchronisation des journaux (`docs/codex/last_output.json`) et documentation backend.
 
-VALIDATE? no
+## RESULTS
+- API FastAPI exposee via `backend.main:app` avec endpoints `/api/v1/health` et `/api/v1/plannings` en production.
+- Module de domaine artistes/planning fonctionnel avec validation Pydantic et gestion d'erreurs `PlanningError`.
+- Suite de tests asynchrones (`pytest`, `httpx.AsyncClient`) assurant la couverture minimale et generation de `coverage.xml`.
+- Documentation (README, AGENT backend) et changelog synchronises avec la roadmap.
+
+VALIDATE? yes
