@@ -23,4 +23,4 @@ Ajout de la specification fonctionnelle v0.1 et branchement des agents sur cette
 ## ARCHIVE
 - Archiver les versions precedentes des AGENTs avant SUT si necessaire.
 
-VALIDATE? yes/no
+VALIDATE? yes

@@ -28,3 +28,9 @@
 - Ajout des guards PowerShell et workflows CI.
 - Mise a jour roadmap step-04 et documentation associee.
 - Ref: docs/roadmap/step-04.md
+
+## 2025-09-22
+- Publication de la specification fonctionnelle v0.1 comme reference produit.
+- Injection des en-tetes SUT dans les fichiers agents backend/frontend/devops/docs.
+- Ajout du script ensure_spec.ps1 et durcissement du guard documentaire.
+- Ref: docs/roadmap/step-03.md

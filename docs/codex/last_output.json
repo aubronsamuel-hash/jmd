@@ -1,18 +1,17 @@
 {
-  "timestamp": "2025-09-28T09:00:00Z",
+  "timestamp": "2025-09-22T08:00:00Z",
   "plan": [
-    "Aligner schemas Pydantic et models SQLAlchemy pour le CRUD artistes/disponibilites.",
-    "Ajouter les endpoints FastAPI POST/GET/PUT/DELETE /artists avec validations et gestion des erreurs.",
-    "Factoriser les services domaine pour synchroniser artistes, disponibilites et plannings persistes.",
-    "Generer une migration Alembic garantissant unicite des creneaux et suppression en cascade.",
-    "Etendre les tests pytest (SQLite en memoire) couvrant les scenarios CRUD artistes et la regeneration de planning.",
-    "Mettre a jour la documentation backend, agents et exemples d'appels API."
+    "Publier la specification fonctionnelle v0.1 dans docs/specs.",
+    "Ajouter la mention SUT aux fichiers agents backend/frontend/devops/docs.",
+    "Creer tools/docs/ensure_spec.ps1 pour injecter la spec et verifier la longueur.",
+    "Renforcer docs_guard pour controler la spec et les agents.",
+    "Mettre a jour la roadmap step-03 et le changelog."
   ],
-  "last_update": "2025-09-28T15:00:00Z",
+  "last_update": "2025-09-22T18:00:00Z",
   "status": "completed",
   "notes": [
-    "CRUD artistes expose avec FastAPI et contrainte Alembic sur les disponibilites.",
-    "Tests pytest (SQLite) couvrant creation, mise a jour et suppression d'artistes.",
-    "Documentation API publiee dans docs/backend/api.md."
+    "Spec fonctionnelle v0.1 commitee et referencee par tous les agents.",
+    "Script ensure_spec.ps1 injecte la SUT automatiquement.",
+    "docs_guard valide la presence de la spec et des marqueurs SUT."
   ]
 }
