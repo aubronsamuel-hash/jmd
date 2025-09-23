@@ -74,6 +74,8 @@ jobs:
           python-version: "3.12"
       - name: Inject roadmap reference (auto-detect)
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if ($env:ROADMAP_STEP_PATH) {
             ./tools/guards/ensure_roadmap_ref.ps1 -StepPath $env:ROADMAP_STEP_PATH
@@ -82,6 +84,8 @@ jobs:
           }
       - name: Run guards
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           ./tools/guards/run_all_guards.ps1
 
