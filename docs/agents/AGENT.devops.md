@@ -1,3 +1,6 @@
+SUT: docs/specs/spec-fonctionnelle-v0.1.md
+Les guards/CI verifient la presence et la reference de la spec.
+
 # AGENT devops
 
 ## Objectifs

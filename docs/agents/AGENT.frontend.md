@@ -1,3 +1,6 @@
+SUT: docs/specs/spec-fonctionnelle-v0.1.md
+Les vues (planning, paie, materiel, notifications) et interactions (drag-drop, timeline) suivent la spec.
+
 # AGENT frontend
 
 ## Objectifs

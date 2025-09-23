@@ -8,3 +8,5 @@
 - [STEP 06](./step-06.md)
 - [STEP 05](./step-05.md)
 - [STEP 04](./step-04.md)
+- [STEP 03](./step-03.md)
+
