@@ -2,7 +2,13 @@
 
 from .artists import Artist, Availability
 from .planning import PlanningAssignment, PlanningCreate, PlanningResponse
-from .services import PlanningError, create_planning
+from .services import (
+    PlanningError,
+    PlanningNotFoundError,
+    create_planning,
+    get_planning,
+    list_plannings,
+)
 
 __all__ = [
     "Artist",
@@ -11,5 +17,8 @@ __all__ = [
     "PlanningCreate",
     "PlanningResponse",
     "PlanningError",
+    "PlanningNotFoundError",
     "create_planning",
+    "get_planning",
+    "list_plannings",
 ]

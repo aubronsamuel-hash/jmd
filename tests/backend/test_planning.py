@@ -49,6 +49,7 @@ async def test_create_planning_returns_assignments(async_client) -> None:
     body = response.json()
 
     assert response.status_code == 201
+    assert "planning_id" in body
     assert body["event_date"] == event_date.date().isoformat()
     assert len(body["assignments"]) == 2
 
@@ -59,6 +60,12 @@ async def test_create_planning_returns_assignments(async_client) -> None:
     second_assignment = body["assignments"][1]
     assert second_assignment["artist_id"] == artist_two_id
     assert second_assignment["slot"]["start"].startswith(event_date.date().isoformat())
+
+    list_response = await async_client.get("/api/v1/plannings")
+    assert list_response.status_code == 200
+    listed = list_response.json()
+    assert len(listed) == 1
+    assert listed[0]["planning_id"] == body["planning_id"]
 
 
 @pytest.mark.asyncio
@@ -113,3 +120,48 @@ async def test_create_planning_rejects_invalid_availability(async_client) -> Non
 
     assert response.status_code == 422
     assert "Availability end must be after start" in str(body)
+
+
+@pytest.mark.asyncio
+async def test_get_planning_by_id_returns_persisted_item(async_client) -> None:
+    """Fetching a planning by id should return the persisted payload."""
+
+    event_date = datetime(2024, 5, 15)
+    payload = {
+        "event_date": event_date.date().isoformat(),
+        "artists": [
+            {
+                "name": "Echo",
+                "availabilities": [
+                    {
+                        "start": (event_date + timedelta(hours=12)).isoformat(),
+                        "end": (event_date + timedelta(hours=13)).isoformat(),
+                    }
+                ],
+            }
+        ],
+    }
+
+    creation = await async_client.post("/api/v1/plannings", json=payload)
+    planning_id = creation.json()["planning_id"]
+
+    response = await async_client.get(f"/api/v1/plannings/{planning_id}")
+    body = response.json()
+
+    assert response.status_code == 200
+    assert body["planning_id"] == planning_id
+    assert body["event_date"] == event_date.date().isoformat()
+    assert len(body["assignments"]) == 1
+
+
+@pytest.mark.asyncio
+async def test_get_planning_returns_404_for_unknown_id(async_client) -> None:
+    """Requesting a non existing planning should return 404."""
+
+    random_id = str(uuid4())
+
+    response = await async_client.get(f"/api/v1/plannings/{random_id}")
+    body = response.json()
+
+    assert response.status_code == 404
+    assert body["detail"].startswith("Planning")

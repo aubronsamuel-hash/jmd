@@ -1,5 +1,11 @@
 # Changelog
 
+## 2025-09-27
+- Ajout de la persistence SQLAlchemy avec models `backend.models` et configuration `backend.db`.
+- Creation des migrations Alembic initiales et documentation des commandes d'execution.
+- Nouveaux endpoints REST pour lister et recuperer les plannings, avec tests pytest sur SQLite.
+- Ref: docs/roadmap/step-07.md
+
 ## 2025-09-25
 - Bootstrap du backend FastAPI avec configuration `backend.config` et point d'entree `backend.main`.
 - Mise en place des schemas de domaine (artistes, disponibilites, planning) et du service de creation de planning.
