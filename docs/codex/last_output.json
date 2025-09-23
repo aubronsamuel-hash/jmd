@@ -1,17 +1,17 @@
 {
-  "timestamp": "2025-09-24T12:00:00Z",
+  "timestamp": "2025-09-25T09:00:00Z",
   "plan": [
-    "Initialiser un noyau backend FastAPI avec un pyproject et les dependances essentielles (fastapi, uvicorn, sqlalchemy, pydantic).",
+    "Initialiser un noyau backend FastAPI avec un pyproject et les dependances essentielles (fastapi, uvicorn, pydantic).",
     "Structurer le package src/backend/app avec un point d'entree main.py, configuration settings et routes de sante/planification.",
     "Ajouter un premier module de domaine pour la gestion des artistes et disponibilites ainsi que des schemas de transfert de donnees.",
     "Configurer pytest + coverage, ecrire des tests de fumee (endpoint de sante, creation de planning) et viser >= 70% de couverture.",
     "Mettre a jour la CI backend (workflow backend-tests) pour installer les dependances projet, lancer pytest et publier les rapports.",
     "Documenter les commandes de developpement et mettre a jour README, AGENT backend et changelog a la cloture."
   ],
-  "last_update": "2025-09-24T12:00:00Z",
-  "status": "planned",
+  "last_update": "2025-09-25T09:00:00Z",
+  "status": "delivered",
   "notes": [
-    "Prioriser une solution d'installation Python reproductible (requirements.txt ou uv).",
-    "PowerShell 7 indisponible dans l'environnement local actuel; execution des guards a planifier sur un runner compatible."
+    "Backend FastAPI operationnel avec endpoints health/plannings et couverture >= 70 %.",
+    "Workflow CI backend-tests installe le package via pyproject, genere coverage.xml et archive l'artefact."
   ]
 }

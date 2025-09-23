@@ -11,6 +11,15 @@
 - Pytest + plugins (pytest-asyncio, pytest-cov).
 - Base de donnees cible: PostgreSQL (defaut) avec support SQLite pour tests rapides.
 
+## Bootstrap Step 06
+- Package principal `backend` (layout `src/backend`) expose `create_app()` et l'instance FastAPI `app`.
+- Configuration via `backend.config.Settings` avec prefixe API par defaut `/api/v1`.
+- Endpoints disponibles:
+  - `GET /api/v1/health` renvoie l'etat du service.
+  - `POST /api/v1/plannings` genere un planning a partir des disponibilites artistes.
+- Schemas Pydantic: `Availability`, `Artist`, `PlanningCreate`, `PlanningResponse`.
+- Service de domaine `create_planning` selectionne le premier creneau disponible par artiste et leve `PlanningError` sinon.
+
 ## Conventions API
 - Prefixer les routes par `/api/v1` (ajuster si version change).
 - Utiliser schemas Pydantic pour requetes et reponses, valider les champs obligatoires.
@@ -27,8 +36,8 @@
 - Chaque changement de schema doit etre accompagne d'une revision Alembic.
 - Executer `alembic upgrade head` dans la CI avant de lancer les tests d'integration.
 
-## Tests et coverage
-- Commande reference: `pytest --cov=src/backend --cov-report=xml`.
+## Tests et couverture
+- Commande reference: `pytest` (configure avec `--cov=backend --cov-report=xml`).
 - Objectif coverage minimal: 70 % global, avec seuils par module si necessaire.
 - Inclure tests unitaires, integration, et eventuellement contract tests.
 
@@ -44,3 +53,7 @@
 - [ ] Logs et observabilite verifies.
 - [ ] Reference roadmap incluse dans commits/PR.
 
+## Commandes utiles
+- Installation dependances: `pip install .[dev]`
+- Lancement API: `uvicorn backend.main:app --reload`
+- Tests locaux: `pytest`
