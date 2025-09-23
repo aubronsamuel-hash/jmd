@@ -27,4 +27,4 @@ Formaliser les agents operants du monorepo et livrer une premiere boucle de guar
 - Documentation agent en place pour reference future.
 - Journalisation dans `docs/CHANGELOG.md` et `docs/codex/last_output.json`.
 
-VALIDATE? yes
+VALIDATE? yes/no
