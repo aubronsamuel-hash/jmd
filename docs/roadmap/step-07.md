@@ -31,6 +31,8 @@ Introduire une couche de persistence relationnelle pour les artistes et planning
 - Documenter les commandes d'initialisation de la base et des migrations dans le README backend.
 
 ## RESULTS
-- A remplir apres livraison de l'etape.
+- Persistence relationnelle disponible via SQLAlchemy 2.x avec models et migrations Alembic.
+- Endpoints REST exposes pour consulter les plannings (`GET /plannings`, `GET /plannings/{id}`).
+- Tests pytest sur SQLite en memoire couvrant creation et lecture des plannings.
 
-VALIDATE? no
+VALIDATE? yes

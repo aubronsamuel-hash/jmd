@@ -17,6 +17,12 @@
 - Endpoints disponibles:
   - `GET /api/v1/health` renvoie l'etat du service.
   - `POST /api/v1/plannings` genere un planning a partir des disponibilites artistes.
+- Persistence configuree via `backend.db` (engine + session) et `backend.models` (SQLAlchemy 2.x).
+- Migrations Alembic disponibles (`PYTHONPATH=src alembic -c src/backend/db/alembic.ini upgrade head`).
+- Nouvelles routes REST:
+  - `GET /api/v1/plannings` liste les plannings persistes.
+  - `GET /api/v1/plannings/{planning_id}` renvoie un planning par identifiant.
+- Tests utilisent SQLite en memoire (`BACKEND_DATABASE_URL=sqlite+pysqlite:///:memory:`) avec `pytest`.
 - Schemas Pydantic: `Availability`, `Artist`, `PlanningCreate`, `PlanningResponse`.
 - Service de domaine `create_planning` selectionne le premier creneau disponible par artiste et leve `PlanningError` sinon.
 
@@ -56,4 +62,5 @@
 ## Commandes utiles
 - Installation dependances: `pip install .[dev]`
 - Lancement API: `uvicorn backend.main:app --reload`
+- Migration base de donnees: `PYTHONPATH=src alembic -c src/backend/db/alembic.ini upgrade head`
 - Tests locaux: `pytest`

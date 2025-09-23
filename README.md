@@ -29,6 +29,15 @@ pip install .[dev]
 uvicorn backend.main:app --reload
 ```
 
+### Base de donnees et migrations
+- Configuration par defaut: SQLite fichier `planning.db` (modifiable via `BACKEND_DATABASE_URL`).
+- Creation automatique du schema au demarrage de l'application.
+- Pour orchestrer les migrations Alembic manuellement:
+  ```bash
+  PYTHONPATH=src alembic -c src/backend/db/alembic.ini upgrade head
+  ```
+- Variable `BACKEND_SQLALCHEMY_ECHO=true` pour activer les logs SQL durant le debug.
+
 ### Tests et couverture
 ```bash
 pytest
