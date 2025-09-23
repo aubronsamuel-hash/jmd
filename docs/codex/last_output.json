@@ -1,16 +1,16 @@
 {
-  "timestamp": "2025-09-27T09:00:00Z",
+  "timestamp": "2025-09-28T09:00:00Z",
   "plan": [
-    "Installer SQLAlchemy 2.x et Alembic et configurer backend.db pour la persistence.",
-    "Definir les models persistants (Artist, Availability, Planning, Assignment) et aligner les schemas Pydantic.",
-    "Brancher create_planning sur la couche persistence pour enregistrer et relire les plannings.",
-    "Exposer GET /api/v1/plannings et GET /api/v1/plannings/{planning_id} pour consulter les plannings.",
-    "Ecrire les tests (pytest + SQLite en memoire) couvrant la creation et la lecture de plannings.",
-    "Mettre a jour README, AGENT backend, workflows CI et changelog apres livraison."
+    "Aligner schemas Pydantic et models SQLAlchemy pour le CRUD artistes/disponibilites.",
+    "Ajouter les endpoints FastAPI POST/GET/PUT/DELETE /artists avec validations et gestion des erreurs.",
+    "Factoriser les services domaine pour synchroniser artistes, disponibilites et plannings persistes.",
+    "Generer une migration Alembic garantissant unicite des creneaux et suppression en cascade.",
+    "Etendre les tests pytest (SQLite en memoire) couvrant les scenarios CRUD artistes et la regeneration de planning.",
+    "Mettre a jour la documentation backend, agents et exemples d'appels API."
   ],
-  "last_update": "2025-09-27T09:00:00Z",
-  "status": "delivered",
+  "last_update": "2025-09-28T09:00:00Z",
+  "status": "planned",
   "notes": [
-    "SQLAlchemy persistence et endpoints de lecture exposes avec couverture de tests."
+    "Iteration focalisee sur la gestion des artistes et la consolidation de la persistence."
   ]
 }
