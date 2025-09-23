@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ROADMAP_STEP_PATH: ${{ vars.ROADMAP_STEP_PATH }}
+      PNPM_VERSION: '9'
     steps:
       - uses: actions/checkout@v4
       - name: Detect pnpm workspace
@@ -17,17 +18,27 @@ jobs:
         run: |
           Set-StrictMode -Version Latest
           $lock = Get-ChildItem -Path . -Filter 'pnpm-lock.yaml' -File -Recurse | Sort-Object FullName | Select-Object -First 1
+          $hasProject = $false
           $projectDir = '.'
           $lockPath = 'pnpm-lock.yaml'
           if ($lock) {
+            $projectDir = $lock.DirectoryName
+            $packageJson = Join-Path $projectDir 'package.json'
+            if (Test-Path $packageJson) {
+              $hasProject = $true
+            }
             $relativeLock = [System.IO.Path]::GetRelativePath((Get-Location).Path, $lock.FullName)
             $lockPath = ($relativeLock -replace '\\', '/')
-            $relativeDir = [System.IO.Path]::GetRelativePath((Get-Location).Path, $lock.DirectoryName)
+            $relativeDir = [System.IO.Path]::GetRelativePath((Get-Location).Path, $projectDir)
             if (-not $relativeDir -or $relativeDir -eq '') {
               $relativeDir = '.'
             }
             $projectDir = ($relativeDir -replace '\\', '/')
+          } else {
+            $projectDir = '.'
           }
+          $hasValue = $hasProject.ToString().ToLower()
+          "has-pnpm=$hasValue" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           "project-dir=$projectDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           "lock-path=$lockPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
       - uses: actions/setup-node@v4
@@ -36,13 +47,19 @@ jobs:
           cache: pnpm
           cache-dependency-path: ${{ steps.detect_pnpm.outputs.lock-path }}
       - name: Set up pnpm
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: ${{ env.PNPM_VERSION }}
           run_install: false
       - name: Enable corepack
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         run: corepack enable
+      - name: Prepare pnpm via corepack
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
+        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - name: Show pnpm version
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         run: pnpm --version
       - name: Setup Python
         uses: actions/setup-python@v5
