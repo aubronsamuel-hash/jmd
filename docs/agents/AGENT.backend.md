@@ -37,6 +37,13 @@ Les schemas, services et regles metier doivent respecter les modules et workflow
 - Documentation des exemples JSON dans `docs/backend/api.md`.
 - Tests d'integration et fixtures dediees aux artistes (`tests/backend/test_artists.py`).
 
+## Evolution Step 09
+- Module `backend.notifications` centralisant la composition et l'envoi multi-canaux (email, Telegram).
+- Parametres de configuration `BACKEND_NOTIFICATION_*` exposes via `backend.config.Settings`.
+- Notifications declenchees automatiquement a la creation d'un planning (`POST /api/v1/plannings`).
+- Endpoints dedies: `POST /api/v1/notifications/test` et `POST /api/v1/notifications/plannings/{planning_id}/events`.
+- Tests d'integration verifies la personnalisation des messages et le routage des canaux (`tests/backend/test_notifications.py`).
+
 ## Conventions API
 - Prefixer les routes par `/api/v1` (ajuster si version change).
 - Utiliser schemas Pydantic pour requetes et reponses, valider les champs obligatoires.

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2025-09-29
+- Mise en place du module `backend.notifications` et parametrage email/Telegram.
+- Envoi automatique lors de la creation de planning et endpoints de declenchement (`/notifications/test`, `/notifications/plannings/{id}/events`).
+- Nouveaux tests backend couvrant la personnalisation des messages et l'orchestration multi-canaux.
+- Documentation roadmap/API/agent backend mise a jour pour decrire les flux de notifications.
+- Ref: docs/roadmap/step-09.md
+
 ## 2025-09-28
 - CRUD complet des artistes expose via FastAPI (routes `/api/v1/artists`).
 - Synchronisation des services domaine, schemas Pydantic et contraintes Alembic pour les disponibilites.

@@ -128,3 +128,48 @@ Reponse (201 Created):
 ```
 
 Ces exemples servent de base pour constituer des jeux de donnees de demonstration et pour alimenter les tests d'integration sur SQLite en memoire.
+
+## Notifications
+
+### Test de configuration
+```http
+POST /api/v1/notifications/test
+```
+
+Reponse (200 OK):
+```json
+{
+  "event": "notifications.test",
+  "subject": "Notification de test",
+  "channels": ["email", "telegram"],
+  "metadata": {
+    "purpose": "connectivity-check"
+  }
+}
+```
+
+### Evenement planning
+```http
+POST /api/v1/notifications/plannings/{planning_id}/events
+Content-Type: application/json
+
+{
+  "event": "planning.reminder"
+}
+```
+
+Reponse (200 OK):
+```json
+{
+  "event": "planning.reminder",
+  "subject": "Rappel planning J-1 - 2024-05-12",
+  "body": "Rappel planning J-1 - 2024-05-12\n\nPlanning: 4c3a6d60-9a52-4c47-8961-cf944aacd187\nDate: 2024-05-12\nAffectations:\n- Alice Cooper: 2024-05-12 10:00 -> 11:00",
+  "channels": ["email", "telegram"],
+  "metadata": {
+    "planning_id": "4c3a6d60-9a52-4c47-8961-cf944aacd187",
+    "event_type": "planning.reminder",
+    "event_date": "2024-05-12",
+    "assignment_count": 1
+  }
+}
+```
