@@ -38,6 +38,19 @@ uvicorn backend.main:app --reload
   ```
 - Variable `BACKEND_SQLALCHEMY_ECHO=true` pour activer les logs SQL durant le debug.
 
+### Endpoints REST
+- `GET /api/v1/health` expose l'etat du service.
+- `POST /api/v1/artists` cree un artiste et synchronise ses disponibilites.
+- `GET /api/v1/artists` liste les artistes persistes tries par nom.
+- `GET /api/v1/artists/{artist_id}` retourne un artiste par identifiant.
+- `PUT /api/v1/artists/{artist_id}` remplace les informations et disponibilites de l'artiste.
+- `DELETE /api/v1/artists/{artist_id}` supprime un artiste et ses disponibilites.
+- `POST /api/v1/plannings` genere un planning a partir des artistes fournis.
+- `GET /api/v1/plannings` liste les plannings persistes.
+- `GET /api/v1/plannings/{planning_id}` retourne un planning par identifiant.
+
+Des exemples de requetes et reponses JSON sont disponibles dans [docs/backend/api.md](docs/backend/api.md).
+
 ### Tests et couverture
 ```bash
 pytest

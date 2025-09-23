@@ -39,4 +39,32 @@ class Artist(BaseModel):
     )
 
 
-__all__ = ["Artist", "Availability"]
+class ArtistCreate(BaseModel):
+    """Payload used to create a new artist."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(..., min_length=1, description="Public name of the artist")
+    availabilities: List[Availability] = Field(
+        default_factory=list,
+        description="Declared availabilities for the artist",
+    )
+    id: UUID | None = Field(
+        default=None,
+        description="Optional identifier for the artist. Generated when omitted.",
+    )
+
+
+class ArtistUpdate(BaseModel):
+    """Payload used to update an existing artist."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str = Field(..., min_length=1, description="Public name of the artist")
+    availabilities: List[Availability] = Field(
+        default_factory=list,
+        description="Declared availabilities for the artist",
+    )
+
+
+__all__ = ["Artist", "Availability", "ArtistCreate", "ArtistUpdate"]

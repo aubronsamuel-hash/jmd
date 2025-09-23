@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import List
 from uuid import UUID, uuid4
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import Uuid
 
@@ -32,6 +32,7 @@ class Availability(Base):
     """Availability slot linked to an artist."""
 
     __tablename__ = "availabilities"
+    __table_args__ = (UniqueConstraint("artist_id", "start", "end"),)
 
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     artist_id: Mapped[UUID] = mapped_column(

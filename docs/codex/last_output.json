@@ -8,9 +8,11 @@
     "Etendre les tests pytest (SQLite en memoire) couvrant les scenarios CRUD artistes et la regeneration de planning.",
     "Mettre a jour la documentation backend, agents et exemples d'appels API."
   ],
-  "last_update": "2025-09-28T09:00:00Z",
-  "status": "planned",
+  "last_update": "2025-09-28T15:00:00Z",
+  "status": "completed",
   "notes": [
-    "Iteration focalisee sur la gestion des artistes et la consolidation de la persistence."
+    "CRUD artistes expose avec FastAPI et contrainte Alembic sur les disponibilites.",
+    "Tests pytest (SQLite) couvrant creation, mise a jour et suppression d'artistes.",
+    "Documentation API publiee dans docs/backend/api.md."
   ]
 }

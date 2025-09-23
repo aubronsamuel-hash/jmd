@@ -26,6 +26,14 @@
 - Schemas Pydantic: `Availability`, `Artist`, `PlanningCreate`, `PlanningResponse`.
 - Service de domaine `create_planning` selectionne le premier creneau disponible par artiste et leve `PlanningError` sinon.
 
+## Evolution Step 08
+- Ajout des schemas `ArtistCreate` et `ArtistUpdate` pour differencier les payloads d'ecriture.
+- Services domaine exposes pour gerer le CRUD artistes (`create_artist`, `list_artists`, `get_artist`, `update_artist`, `delete_artist`).
+- Contrainte d'unicite `(artist_id, start, end)` sur la table `availabilities` via migration Alembic `20240928_02`.
+- Routes REST `POST/GET/GET{id}/PUT/DELETE /api/v1/artists` avec gestion des erreurs 404/409.
+- Documentation des exemples JSON dans `docs/backend/api.md`.
+- Tests d'integration et fixtures dediees aux artistes (`tests/backend/test_artists.py`).
+
 ## Conventions API
 - Prefixer les routes par `/api/v1` (ajuster si version change).
 - Utiliser schemas Pydantic pour requetes et reponses, valider les champs obligatoires.
