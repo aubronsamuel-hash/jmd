@@ -1,4 +1,4 @@
-name: Documentation Guards
+name: guards
 
 on:
   push:
@@ -7,8 +7,55 @@ on:
 jobs:
   guards:
     runs-on: ubuntu-latest
+    env:
+      ROADMAP_STEP_PATH: ${{ vars.ROADMAP_STEP_PATH }}
     steps:
       - uses: actions/checkout@v4
+      - name: Detect pnpm workspace
+        id: detect_pnpm
+        shell: pwsh
+        run: |
+          Set-StrictMode -Version Latest
+          $lock = Get-ChildItem -Path . -Filter 'pnpm-lock.yaml' -File -Recurse | Sort-Object FullName | Select-Object -First 1
+          $projectDir = '.'
+          $lockPath = 'pnpm-lock.yaml'
+          if ($lock) {
+            $relativeLock = [System.IO.Path]::GetRelativePath((Get-Location).Path, $lock.FullName)
+            $lockPath = ($relativeLock -replace '\\', '/')
+            $relativeDir = [System.IO.Path]::GetRelativePath((Get-Location).Path, $lock.DirectoryName)
+            if (-not $relativeDir -or $relativeDir -eq '') {
+              $relativeDir = '.'
+            }
+            $projectDir = ($relativeDir -replace '\\', '/')
+          }
+          "project-dir=$projectDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          "lock-path=$lockPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: ${{ steps.detect_pnpm.outputs.lock-path }}
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+      - name: Enable corepack
+        run: corepack enable
+      - name: Show pnpm version
+        run: pnpm --version
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Inject roadmap reference (auto-detect)
+        shell: pwsh
+        run: |
+          if ($env:ROADMAP_STEP_PATH) {
+            ./tools/guards/ensure_roadmap_ref.ps1 -StepPath $env:ROADMAP_STEP_PATH
+          } else {
+            ./tools/guards/ensure_roadmap_ref.ps1
+          }
       - name: Run guards
         shell: pwsh
         run: |
