@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import os
-from collections.abc import AsyncIterator, Callable
+from collections.abc import AsyncIterator, Callable, Iterator
 from datetime import datetime, timedelta
 from uuid import uuid4
 
 import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
+
+from sqlalchemy.orm import Session
 
 from backend.config import get_settings
 from backend.main import create_app
@@ -54,3 +56,19 @@ def artist_payload_factory() -> Callable[..., dict[str, object]]:
         return payload
 
     return _factory
+
+
+@pytest.fixture
+def db_session(async_client: AsyncClient) -> Iterator[Session]:
+    """Provide a synchronous SQLAlchemy session bound to the app engine."""
+
+    transport = async_client._transport
+    assert isinstance(transport, ASGITransport)
+    session_factory = transport.app.state.db_session_factory
+    session = session_factory()
+    try:
+        yield session
+        session.commit()
+    finally:
+        session.rollback()
+        session.close()

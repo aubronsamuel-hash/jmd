@@ -1,5 +1,17 @@
 """Domain models and services for the planning backend."""
 
+from .analytics import (
+    AnalyticsDashboard,
+    AnalyticsDatasetLatency,
+    AnalyticsExport,
+    AnalyticsExportFormat,
+    AnalyticsFilter,
+    AnalyticsHeatmapCell,
+    AnalyticsKpi,
+    AnalyticsComparisonPoint,
+    generate_analytics_export,
+    get_analytics_dashboard,
+)
 from .artists import Artist, ArtistCreate, ArtistUpdate, Availability
 from .planning import PlanningAssignment, PlanningCreate, PlanningResponse
 from .services import (
@@ -26,6 +38,16 @@ __all__ = [
     "PlanningAssignment",
     "PlanningCreate",
     "PlanningResponse",
+    "AnalyticsDashboard",
+    "AnalyticsDatasetLatency",
+    "AnalyticsExport",
+    "AnalyticsExportFormat",
+    "AnalyticsFilter",
+    "AnalyticsHeatmapCell",
+    "AnalyticsKpi",
+    "AnalyticsComparisonPoint",
+    "get_analytics_dashboard",
+    "generate_analytics_export",
     "ArtistError",
     "ArtistNotFoundError",
     "ArtistConflictError",
