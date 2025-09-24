@@ -184,7 +184,7 @@ $requiredSections = @(
   '## CI',
   '## ARCHIVE'
 )
-$allowedFinalLines = @('VALIDATE? yes/no', 'VALIDATE? yes', 'VALIDATE? no')
+$finalLinePattern = '^VALIDATE\? (yes|no)(  \(SAM ONLY may flip to yes\))?$'
 
 foreach ($file in $roadmapFiles) {
   $content = Get-Content -Path $file.FullName
@@ -193,7 +193,7 @@ foreach ($file in $roadmapFiles) {
     exit 1
   }
   $raw = $content -join "`n"
-  if ($raw -notmatch '^# STEP [0-9]{2} - ') {
+  if ($raw -notmatch '^# STEP [0-9]{2}(?:\.[0-9]{2})? - ') {
     Write-Error "Le fichier $($file.Name) doit commencer par un titre '# STEP XX - ...'."
     exit 1
   }
@@ -209,8 +209,8 @@ foreach ($file in $roadmapFiles) {
     exit 1
   }
   $lastLine = $nonEmpty[-1]
-  if ($allowedFinalLines -notcontains $lastLine) {
-    Write-Error "La derniere ligne non vide de $($file.Name) doit etre l'une des valeurs 'VALIDATE? yes/no', 'VALIDATE? yes' ou 'VALIDATE? no'."
+  if (($lastLine -ne 'VALIDATE? yes/no') -and ($lastLine -notmatch $finalLinePattern)) {
+    Write-Error "La derniere ligne non vide de $($file.Name) doit suivre le format 'VALIDATE? yes/no' ou 'VALIDATE? yes|no  (SAM ONLY may flip to yes)'."
     exit 1
   }
   $linkPattern = "./$($file.Name)"
