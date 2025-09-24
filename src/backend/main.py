@@ -5,6 +5,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from .api.auth import router as auth_router
+from .api.mission_tags import router as mission_tags_router
+from .api.mission_templates import router as mission_templates_router
+from .api.projects import router as projects_router
+from .api.venues import router as venues_router
 from .config import Settings, get_settings
 from .db import Base, build_engine, build_session_factory
 from .dependencies import get_settings as request_settings  # noqa: F401
@@ -34,6 +38,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return HealthResponse()
 
     app.include_router(auth_router, prefix="/api/v1")
+    app.include_router(venues_router, prefix="/api/v1")
+    app.include_router(projects_router, prefix="/api/v1")
+    app.include_router(mission_tags_router, prefix="/api/v1")
+    app.include_router(mission_templates_router, prefix="/api/v1")
 
     return app
 

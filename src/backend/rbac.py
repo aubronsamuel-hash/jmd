@@ -8,6 +8,14 @@ class Permission(Enum):
     MANAGE_INVITATIONS = "manage_invitations"
     SWITCH_ORGANISATION = "switch_organisation"
     REQUEST_MAGIC_LINK = "request_magic_link"
+    MANAGE_VENUES = "manage_venues"
+    VIEW_VENUES = "view_venues"
+    MANAGE_PROJECTS = "manage_projects"
+    VIEW_PROJECTS = "view_projects"
+    MANAGE_MISSION_TEMPLATES = "manage_mission_templates"
+    VIEW_MISSION_TEMPLATES = "view_mission_templates"
+    MANAGE_MISSION_TAGS = "manage_mission_tags"
+    VIEW_MISSION_TAGS = "view_mission_tags"
 
 
 class Role(Enum):
@@ -22,17 +30,43 @@ _ROLE_PERMISSIONS: Final[dict[Role, set[Permission]]] = {
         Permission.MANAGE_INVITATIONS,
         Permission.SWITCH_ORGANISATION,
         Permission.REQUEST_MAGIC_LINK,
+        Permission.MANAGE_VENUES,
+        Permission.VIEW_VENUES,
+        Permission.MANAGE_PROJECTS,
+        Permission.VIEW_PROJECTS,
+        Permission.MANAGE_MISSION_TEMPLATES,
+        Permission.VIEW_MISSION_TEMPLATES,
+        Permission.MANAGE_MISSION_TAGS,
+        Permission.VIEW_MISSION_TAGS,
     },
     Role.ADMIN: {
         Permission.MANAGE_INVITATIONS,
         Permission.SWITCH_ORGANISATION,
         Permission.REQUEST_MAGIC_LINK,
+        Permission.MANAGE_VENUES,
+        Permission.VIEW_VENUES,
+        Permission.MANAGE_PROJECTS,
+        Permission.VIEW_PROJECTS,
+        Permission.MANAGE_MISSION_TEMPLATES,
+        Permission.VIEW_MISSION_TEMPLATES,
+        Permission.MANAGE_MISSION_TAGS,
+        Permission.VIEW_MISSION_TAGS,
     },
     Role.MEMBER: {
         Permission.SWITCH_ORGANISATION,
         Permission.REQUEST_MAGIC_LINK,
+        Permission.VIEW_VENUES,
+        Permission.VIEW_PROJECTS,
+        Permission.VIEW_MISSION_TEMPLATES,
+        Permission.VIEW_MISSION_TAGS,
     },
-    Role.VIEWER: {Permission.SWITCH_ORGANISATION},
+    Role.VIEWER: {
+        Permission.SWITCH_ORGANISATION,
+        Permission.VIEW_VENUES,
+        Permission.VIEW_PROJECTS,
+        Permission.VIEW_MISSION_TEMPLATES,
+        Permission.VIEW_MISSION_TAGS,
+    },
 }
 
 

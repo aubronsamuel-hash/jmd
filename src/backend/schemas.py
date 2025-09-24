@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime, time
 from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_serializer
@@ -89,3 +89,150 @@ class SwitchOrganisationRequest(BaseModel):
     organization_id: str = Field(alias="organizationId")
 
     model_config = {"populate_by_name": True}
+
+
+class VenueBase(BaseModel):
+    name: str
+    address: str | None = None
+    city: str | None = None
+    country: str | None = None
+    postal_code: str | None = Field(default=None, alias="postalCode")
+    capacity: int | None = None
+    notes: str | None = None
+
+    model_config = {"populate_by_name": True}
+
+
+class VenueCreate(VenueBase):
+    pass
+
+
+class VenueUpdate(BaseModel):
+    name: str | None = None
+    address: str | None = None
+    city: str | None = None
+    country: str | None = None
+    postal_code: str | None = Field(default=None, alias="postalCode")
+    capacity: int | None = None
+    notes: str | None = None
+
+    model_config = {"populate_by_name": True}
+
+
+class VenueResponse(VenueBase):
+    id: str
+    organization_id: str = Field(alias="organizationId")
+    created_at: datetime = Field(alias="createdAt")
+    updated_at: datetime = Field(alias="updatedAt")
+
+    model_config = {
+        "populate_by_name": True,
+        "from_attributes": True,
+    }
+
+
+class ProjectBase(BaseModel):
+    name: str
+    description: str | None = None
+    start_date: date | None = Field(default=None, alias="startDate")
+    end_date: date | None = Field(default=None, alias="endDate")
+    budget_cents: int | None = Field(default=None, alias="budgetCents")
+    team_type: str | None = Field(default=None, alias="teamType")
+
+    model_config = {"populate_by_name": True}
+
+
+class ProjectCreate(ProjectBase):
+    venue_ids: list[str] = Field(default_factory=list, alias="venueIds")
+
+
+class ProjectUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    start_date: date | None = Field(default=None, alias="startDate")
+    end_date: date | None = Field(default=None, alias="endDate")
+    budget_cents: int | None = Field(default=None, alias="budgetCents")
+    team_type: str | None = Field(default=None, alias="teamType")
+    venue_ids: list[str] | None = Field(default=None, alias="venueIds")
+
+    model_config = {"populate_by_name": True}
+
+
+class ProjectResponse(ProjectBase):
+    id: str
+    organization_id: str = Field(alias="organizationId")
+    created_at: datetime = Field(alias="createdAt")
+    updated_at: datetime = Field(alias="updatedAt")
+    venues: list[VenueResponse] = Field(default_factory=list)
+
+    model_config = {
+        "populate_by_name": True,
+        "from_attributes": True,
+    }
+
+
+class MissionTagCreate(BaseModel):
+    slug: str
+    label: str
+
+
+class MissionTagUpdate(BaseModel):
+    slug: str | None = None
+    label: str | None = None
+
+
+class MissionTagResponse(BaseModel):
+    id: str
+    slug: str
+    label: str
+    organization_id: str = Field(alias="organizationId")
+    created_at: datetime = Field(alias="createdAt")
+    updated_at: datetime = Field(alias="updatedAt")
+
+    model_config = {
+        "populate_by_name": True,
+        "from_attributes": True,
+    }
+
+
+class MissionTemplateBase(BaseModel):
+    name: str
+    description: str | None = None
+    team_size: int = Field(alias="teamSize")
+    required_skills: list[str] = Field(default_factory=list, alias="requiredSkills")
+    default_start_time: time | None = Field(default=None, alias="defaultStartTime")
+    default_end_time: time | None = Field(default=None, alias="defaultEndTime")
+    default_venue_id: str | None = Field(default=None, alias="defaultVenueId")
+
+    model_config = {"populate_by_name": True}
+
+
+class MissionTemplateCreate(MissionTemplateBase):
+    tag_ids: list[str] = Field(default_factory=list, alias="tagIds")
+
+
+class MissionTemplateUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
+    team_size: int | None = Field(default=None, alias="teamSize")
+    required_skills: list[str] | None = Field(default=None, alias="requiredSkills")
+    default_start_time: time | None = Field(default=None, alias="defaultStartTime")
+    default_end_time: time | None = Field(default=None, alias="defaultEndTime")
+    default_venue_id: str | None = Field(default=None, alias="defaultVenueId")
+    tag_ids: list[str] | None = Field(default=None, alias="tagIds")
+
+    model_config = {"populate_by_name": True}
+
+
+class MissionTemplateResponse(MissionTemplateBase):
+    id: str
+    organization_id: str = Field(alias="organizationId")
+    created_at: datetime = Field(alias="createdAt")
+    updated_at: datetime = Field(alias="updatedAt")
+    default_venue: VenueResponse | None = Field(default=None, alias="defaultVenue")
+    tags: list[MissionTagResponse] = Field(default_factory=list)
+
+    model_config = {
+        "populate_by_name": True,
+        "from_attributes": True,
+    }
