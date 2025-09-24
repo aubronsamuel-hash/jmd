@@ -34,4 +34,4 @@
 
 * After validation: update `docs/CHANGELOG.md`, `docs/codex/last_output.json`, and `docs/roadmap/ROADMAP.readme.md` history section.
 
-VALIDATE? no
+VALIDATE? no  (SAM ONLY may flip to yes)

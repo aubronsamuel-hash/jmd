@@ -12,7 +12,7 @@ function Write-Info {
   Write-Host "[roadmap_guard] $Message"
 }
 
-$refPattern = 'Ref: (docs/roadmap/step-[0-9]{2}\.md)'
+$refPattern = 'Ref: (docs/roadmap/step-[0-9]{2}(?:\.[0-9]{2})?\.md)'
 $gh = Get-Command gh -ErrorAction SilentlyContinue
 $commitMessage = ''
 $gitMessageLoaded = $false
@@ -112,8 +112,8 @@ if ($StepPath) {
   $StepPath = $StepPath.Trim()
 }
 
-if ($StepPath -notmatch '^docs/roadmap/step-[0-9]{2}\.md$') {
-  throw "StepPath '$StepPath' is not in the expected format docs/roadmap/step-XX.md."
+if ($StepPath -notmatch '^docs/roadmap/step-[0-9]{2}(?:\.[0-9]{2})?\.md$') {
+  throw "StepPath '$StepPath' is not in the expected format docs/roadmap/step-XX[.YY].md."
 }
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path

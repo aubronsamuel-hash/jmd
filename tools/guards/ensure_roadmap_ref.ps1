@@ -12,7 +12,7 @@ function Write-Info {
   Write-Host "[ensure_roadmap_ref] $Message"
 }
 
-$refPattern = 'Ref: (docs/roadmap/step-[0-9]{2}\.md)'
+$refPattern = 'Ref: (docs/roadmap/step-[0-9]{2}(?:\.[0-9]{2})?\.md)'
 $gh = Get-Command gh -ErrorAction SilentlyContinue
 $commitMessage = ''
 $gitMessageLoaded = $false
@@ -92,16 +92,19 @@ function Get-PrContext {
 }
 
 function Resolve-StepPathFromRoadmap {
-$roadmapReadme = Join-Path 'docs' 'roadmap' 'ROADMAP.readme.md'
+  $roadmapReadme = Join-Path 'docs' 'roadmap' 'ROADMAP.readme.md'
   if (-not (Test-Path $roadmapReadme)) { return $null }
   try {
     $content = Get-Content $roadmapReadme -Raw
   } catch {
     return $null
   }
-  $match = [regex]::Match($content, 'step-([0-9]{2})\.md')
-  if ($match.Success -and $match.Value) {
-    return "docs/roadmap/$($match.Value)"
+  $matches = [regex]::Matches($content, 'step-([0-9]{2}(?:\.[0-9]{2})?)\.md')
+  if ($matches.Count -gt 0) {
+    $first = $matches[0].Value
+    if ($first) {
+      return "docs/roadmap/$first"
+    }
   }
   return $null
 }
@@ -146,8 +149,8 @@ if (-not $StepPath) {
 if ($StepPath) {
   $StepPath = $StepPath.Trim()
 }
-if ($StepPath -notmatch '^docs/roadmap/step-[0-9]{2}\.md$') {
-  throw "StepPath '$StepPath' is not in the expected format docs/roadmap/step-XX.md."
+if ($StepPath -notmatch '^docs/roadmap/step-[0-9]{2}(?:\.[0-9]{2})?\.md$') {
+  throw "StepPath '$StepPath' is not in the expected format docs/roadmap/step-XX[.YY].md."
 }
 
 $refLine = "Ref: $StepPath"
