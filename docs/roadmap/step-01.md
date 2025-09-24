@@ -1,18 +1,16 @@
 # STEP 01 - Auth foundations for organisations
 
-## CONTEXT
+## SUMMARY
 
-* Premiere etape de la roadmap fonctionnelle (spec section 11) couvrant l'authentification, le RBAC et la gestion des organisations.
-* S'appuie sur les exigences des modules 1 (roles et permissions), 2 (entites Utilisateur/Organisation) et 3.1 (Auth, comptes et organisations) de la spec v0.1.
-* Prepare les agents backend et frontend a disposer d'un socle securise avant d'aborder les projets et missions.
+Premiere iteration dediee a la mise en place de l'authentification multi-organisation, du modele RBAC et de l'observabilite associee pour preparer les modules suivants de la spec v0.1.
 
-## OBJECTIF
+## GOALS
 
-* Livrer un socle d'authentification multi-organisation solide couvrant inscription, connexion (mot de passe et lien magique), invitations et changement de contexte organisationnel.
-* Mettre en place un modele RBAC complet avec roles et portees conformes a la spec fonctionnelle.
-* Outiller l'observabilite et l'audit des flux d'authentification des le demarrage du produit.
+- Livrer un socle d'authentification couvrant inscription, connexion (mot de passe et lien magique), invitations et changement de contexte organisationnel.
+- Mettre en production un modele RBAC complet avec roles et portees conformes a la spec fonctionnelle.
+- Outiller l'observabilite et l'audit des flux d'authentification des le demarrage du produit.
 
-## ACTIONS
+## CHANGES
 
 ### Backend
 
@@ -38,14 +36,26 @@
 2. Completer `docs/CHANGELOG.md` et `docs/codex/last_output.json` pour suivre l'avancement, et maintenir `docs/roadmap/ROADMAP.readme.md` a jour.
 3. Executer `tools/guards/run_all_guards.ps1`, `pytest`, `pnpm test --filter frontend` avant chaque merge et analyser les rapports de couverture.
 
-## RESULTATS
+## TESTS
 
-* A documenter apres realisation des actions precedentes.
+- `tools/guards/run_all_guards.ps1` pour controler la documentation et la roadmap.
+- `pytest` pour les modules backend d'authentification et RBAC.
+- `pnpm test --filter frontend` pour valider les composants et vues auth.
 
-## PROCHAINES ETAPES
+## CI
 
-* Planifier l'execution detaillee (Do) en sequence backend -> frontend -> devops -> docs.
-* Identifier les dependances externes (SMTP, stockage tokens, service email) et lever les risques.
-* Preparer la synchronisation avec les acteurs produit pour valider les parcours auth avant implementation.
+- Workflows GitHub Actions `backend-tests`, `frontend-tests` et `guards` avec caches poetry/pnpm et secrets SMTP.
+- Automatisation des migrations Alembic et du seeding comptes tests dans la pipeline.
+
+## ARCHIVE
+
+- Archiver les diagrammes auth, le guide RBAC et les rapports de couverture dans `docs/codex/` a chaque fin d'iteration.
+- Documenter les resultats dans `docs/CHANGELOG.md` et `docs/codex/last_output.json`.
+
+## NEXT STEPS
+
+- Planifier l'execution detaillee (Do) en sequence backend -> frontend -> devops -> docs.
+- Identifier les dependances externes (SMTP, stockage tokens, service email) et lever les risques.
+- Preparer la synchronisation avec les acteurs produit pour valider les parcours auth avant implementation.
 
 VALIDATE? no
