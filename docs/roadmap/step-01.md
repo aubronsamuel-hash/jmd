@@ -1,53 +1,33 @@
 # STEP 01 - Auth foundations for organisations
 
-## CONTEXT
+## SUMMARY
+- Premiere iteration consacree a l'authentification multi-organisation, en s'appuyant sur la spec fonctionnelle v0.1 (sections 1, 2 et 3.1).
+- Aligne backend, frontend et DevOps pour fournir un socle securise (RBAC complet, invitations et suivi audit).
 
-* Premiere etape de la roadmap fonctionnelle (spec section 11) couvrant l'authentification, le RBAC et la gestion des organisations.
-* S'appuie sur les exigences des modules 1 (roles et permissions), 2 (entites Utilisateur/Organisation) et 3.1 (Auth, comptes et organisations) de la spec v0.1.
-* Prepare les agents backend et frontend a disposer d'un socle securise avant d'aborder les projets et missions.
+## GOALS
+- Livrer un socle d'authentification couvrant inscription, connexion (mot de passe et lien magique) et changement de contexte organisationnel.
+- Mettre en place un modele RBAC coherent avec roles et portees definis dans la spec fonctionnelle.
+- Outiller l'observabilite et l'audit des flux auth des le demarrage.
 
-## OBJECTIF
+## CHANGES
+- Backend : initialisation FastAPI (`src/backend`), configuration Settings, migrations Alembic pour Utilisateur/Organisation/Role, services et endpoints auth (inscription, connexion password + lien magique, invitations multi-organisation, switch organisation) avec journalisation RBAC.
+- Backend : module dedie a la verification des permissions et tests Pytest (unitaires + integration) garantissant >= 70 % de couverture sur le domaine auth/org.
+- Frontend : bootstrap React + Vite, vues formulaires inscription/connexion/lien magique/switch organisation avec gestion des erreurs et etats de chargement.
+- Frontend : gestion de session (tokens, rafraichissement, selection organisation) et tests Vitest pour les composants auth.
+- DevOps & Infra : secrets SMTP et tokens magie, workflows GitHub Actions (`backend-tests`, `frontend-tests`, `guards`), scripts de seeding et automatisation des migrations en CI, collecte des logs structures auth et monitoring (dashboards, alertes 5xx/latence).
+- Documentation & Qualite : diagrammes de flux auth, guide RBAC, mise a jour des AGENTs, synchronisation de `docs/CHANGELOG.md` et `docs/codex/last_output.json`.
 
-* Livrer un socle d'authentification multi-organisation solide couvrant inscription, connexion (mot de passe et lien magique), invitations et changement de contexte organisationnel.
-* Mettre en place un modele RBAC complet avec roles et portees conformes a la spec fonctionnelle.
-* Outiller l'observabilite et l'audit des flux d'authentification des le demarrage du produit.
+## TESTS
+- `tools/guards/run_all_guards.ps1` pour verifier roadmap et documentation.
+- `pytest` avec base SQLite en memoire et couverture ciblee sur auth/org.
+- `pnpm test --filter frontend` pour les composants auth.
 
-## ACTIONS
+## CI
+- Workflows GitHub Actions : `backend-tests.yml`, `frontend-tests.yml`, `guards.yml`.
+- Execution automatique des migrations Alembic et collecte des rapports de couverture.
 
-### Backend
-
-1. Initialiser `src/backend` avec FastAPI, configuration Pydantic Settings et premiere migration Alembic pour Utilisateur, Organisation, Role et relations (associations user-org, invitations, sessions).
-2. Implementer les services et endpoints auth: inscription, connexion password, emission/validation de lien magique, invitation multi-organisation, changement d'organisation et journalisation minimale.
-3. Couvrir la logique RBAC (roles/permissions, verification portee) dans un module dedie et ecrire les tests Pytest (unitaires + integration) avec coverage >= 70 % sur le domaine auth/org.
-
-### Frontend
-
-1. Bootstrapper l'application (React + Vite) si necessaire avec structure modules onboarding/auth.
-2. Creer les vues et formulaires pour inscription, connexion password, lien magique et switch d'organisation (avec gestion d'erreurs et etats de chargement).
-3. Mettre en place la gestion de session front (stockage tokens, rafraichissement, selection organisation) et ecrire tests vitest sur composants auth.
-
-### DevOps & Infra
-
-1. Definir les secrets (SMTP_HOST, SMTP_USER, SMTP_PASS, tokens magie) et workflows GitHub Actions (backend-tests, frontend-tests, guards) avec caches poetry/pnpm.
-2. Ajouter scripts de seeding comptes tests et automatiser les migrations dans la CI.
-3. Configurer la collecte de logs structures auth (niveau audit) et le monitoring initial (dashboards, alertes 5xx/latence auth).
-
-### Documentation & Qualite
-
-1. Documenter les flux auth (diagrammes sequence), le guide RBAC et mettre a jour les AGENTs impactes.
-2. Completer `docs/CHANGELOG.md` et `docs/codex/last_output.json` pour suivre l'avancement, et maintenir `docs/roadmap/ROADMAP.readme.md` a jour.
-3. Executer `tools/guards/run_all_guards.ps1`, `pytest`, `pnpm test --filter frontend` avant chaque merge et analyser les rapports de couverture.
-
-## RESULTATS
-
-* Backend FastAPI operationnel: inscription, connexion, lien magique, invitations et switch multi-organisation avec RBAC conforme.
-* Couverture Pytest backend a 86 % avec verifications sur expiration de sessions et liens magiques; documentation des bonnes pratiques (commit explicite, datetimes UTC naive) pour eviter les regressions.
-* Documentation synchronisee (`docs/CHANGELOG.md`, `docs/codex/last_output.json`) pour tracer la resolution des erreurs initiales et les tests executes.
-
-## PROCHAINES ETAPES
-
-* Planifier l'execution detaillee (Do) en sequence backend -> frontend -> devops -> docs.
-* Identifier les dependances externes (SMTP, stockage tokens, service email) et lever les risques.
-* Preparer la synchronisation avec les acteurs produit pour valider les parcours auth avant implementation.
+## ARCHIVE
+- Archiver les artefacts de tests et les rapports de couverture.
+- Mettre a jour `docs/roadmap/ROADMAP.readme.md`, `docs/CHANGELOG.md` et `docs/codex/last_output.json` apres completion.
 
 VALIDATE? yes
