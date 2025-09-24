@@ -40,7 +40,9 @@
 
 ## RESULTATS
 
-* A documenter apres realisation des actions precedentes.
+* Backend FastAPI operationnel: inscription, connexion, lien magique, invitations et switch multi-organisation avec RBAC conforme.
+* Couverture Pytest backend a 86 % avec verifications sur expiration de sessions et liens magiques; documentation des bonnes pratiques (commit explicite, datetimes UTC naive) pour eviter les regressions.
+* Documentation synchronisee (`docs/CHANGELOG.md`, `docs/codex/last_output.json`) pour tracer la resolution des erreurs initiales et les tests executes.
 
 ## PROCHAINES ETAPES
 
@@ -48,4 +50,4 @@
 * Identifier les dependances externes (SMTP, stockage tokens, service email) et lever les risques.
 * Preparer la synchronisation avec les acteurs produit pour valider les parcours auth avant implementation.
 
-VALIDATE? no
+VALIDATE? yes

@@ -1,16 +1,16 @@
 {
-  "timestamp": "2025-09-24T08:44:17Z",
+  "timestamp": "2025-09-25T09:00:00Z",
   "plan": [
-    "Initialiser le backend FastAPI (models Utilisateur/Organisation, services auth, migrations Alembic) et etablir le module RBAC.",
-    "Mettre en place le frontend onboarding/auth (React + Vite) avec gestion de session multi-organisation et tests vitest.",
-    "Configurer la CI/CD (pytest, pnpm test, guards) et les secrets SMTP pour les liens magiques + seeds comptes tests.",
-    "Documenter les flux d'authentification, le guide RBAC et maintenir roadmap, changelog et journaux synchronises."
+    "Stabiliser l'API auth (tests Pytest 86 % et commits explicites) et preparer l'exposition RBAC aux autres modules.",
+    "Prioriser l'implementation frontend onboarding/auth (React + Vite) avec couverture vitest.",
+    "Industrialiser la CI/CD (pytest, pnpm test, guards) et documenter les regles de persistance/UTC.",
+    "Mettre a jour la documentation (flux auth, guide RBAC) et suivre la roadmap."
   ],
-  "last_update": "2025-09-24T08:44:17Z",
-  "status": "planning",
+  "last_update": "2025-09-25T09:00:00Z",
+  "status": "done",
   "notes": [
-    "Demarrage de la STEP 01 focalisee sur l'authentification multi-organisation.",
-    "Execution a realiser en sequence backend -> frontend -> devops -> docs avec verifications de couverture >= 70 % backend et 80 % frontend.",
-    "Les dependances externes (SMTP, stockage tokens) doivent etre clarifiees avant l'implementation."
+    "La regression initiale venait de sessions non commit et d'un melange naive/aware; correctifs appliques et consignes dans le changelog.",
+    "La couverture backend atteint 86 % et doit etre verifiee via `pytest` avant merge.",
+    "Prochaine priorite: orchestrer le frontend onboarding/auth et preparer les seeds/infra (SMTP)."
   ]
 }
