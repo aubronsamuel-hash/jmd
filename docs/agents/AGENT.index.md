@@ -15,4 +15,4 @@ Source unique de la verite: docs/specs/spec-fonctionnelle-v0.1.md
 ## Rappels
 - Se referer a la spec fonctionnelle pour toute decision produit ou technique.
 - Synchroniser avec `docs/roadmap/` pour connaitre les priorites.
-- Respecter la boucle PDCA-F definie dans `../../AGENT.md`.
+- Respecter la boucle PDCA-F definie dans `../../AGENT.hub.md`.

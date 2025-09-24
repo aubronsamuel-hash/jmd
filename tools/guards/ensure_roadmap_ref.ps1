@@ -92,7 +92,7 @@ function Get-PrContext {
 }
 
 function Resolve-StepPathFromRoadmap {
-  $roadmapReadme = Join-Path 'docs' 'roadmap' 'README.md'
+$roadmapReadme = Join-Path 'docs' 'roadmap' 'ROADMAP.readme.md'
   if (-not (Test-Path $roadmapReadme)) { return $null }
   try {
     $content = Get-Content $roadmapReadme -Raw
@@ -135,7 +135,7 @@ if (-not $StepPath) {
   $resolved = Resolve-StepPathFromRoadmap
   if ($resolved) {
     $StepPath = $resolved
-    Write-Info "Detected StepPath from docs/roadmap/README.md: $StepPath"
+    Write-Info "Detected StepPath from docs/roadmap/ROADMAP.readme.md: $StepPath"
   }
 }
 

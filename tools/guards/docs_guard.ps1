@@ -95,7 +95,7 @@ function Get-DiffForFile {
 }
 
 $agentRequirements = @(
-  @{ Path = 'docs/agents/AGENT.md'; Marker = 'Source unique de la verite: docs/specs/spec-fonctionnelle-v0.1.md'; DiffMarker = $null },
+  @{ Path = 'docs/agents/AGENT.index.md'; Marker = 'Source unique de la verite: docs/specs/spec-fonctionnelle-v0.1.md'; DiffMarker = $null },
   @{ Path = 'docs/agents/AGENT.backend.md'; Marker = 'SUT: docs/specs/spec-fonctionnelle-v0.1.md'; DiffMarker = 'SUT: docs/specs/spec-fonctionnelle-v0.1.md' },
   @{ Path = 'docs/agents/AGENT.frontend.md'; Marker = 'SUT: docs/specs/spec-fonctionnelle-v0.1.md'; DiffMarker = 'SUT: docs/specs/spec-fonctionnelle-v0.1.md' },
   @{ Path = 'docs/agents/AGENT.devops.md'; Marker = 'SUT: docs/specs/spec-fonctionnelle-v0.1.md'; DiffMarker = 'SUT: docs/specs/spec-fonctionnelle-v0.1.md' },
@@ -143,7 +143,7 @@ foreach ($req in $agentRequirements) {
 }
 
 $required = @(
-  'docs/agents/README.md',
+  'docs/agents/AGENTS.readme.md',
   'docs/CHANGELOG.md',
   'docs/codex/last_output.json',
   'docs/compliance/audit-register.md'
@@ -169,9 +169,9 @@ if (-not $roadmapFiles) {
   exit 1
 }
 
-$roadmapReadme = Join-Path $roadmapDir 'README.md'
+$roadmapReadme = Join-Path $roadmapDir 'ROADMAP.readme.md'
 if (-not (Test-Path $roadmapReadme)) {
-  Write-Error 'Le fichier docs/roadmap/README.md est manquant.'
+  Write-Error 'Le fichier docs/roadmap/ROADMAP.readme.md est manquant.'
   exit 1
 }
 $readmeContent = Get-Content -Path $roadmapReadme -Raw
@@ -215,7 +215,7 @@ foreach ($file in $roadmapFiles) {
   }
   $linkPattern = "./$($file.Name)"
   if ($readmeContent -notmatch [regex]::Escape($linkPattern)) {
-    Write-Error "Le fichier docs/roadmap/README.md doit referencer $($file.Name)."
+    Write-Error "Le fichier docs/roadmap/ROADMAP.readme.md doit referencer $($file.Name)."
     exit 1
   }
 }

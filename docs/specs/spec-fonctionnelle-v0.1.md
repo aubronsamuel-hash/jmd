@@ -16,7 +16,7 @@ OBJECTIF
 ARBORESCENCE CIBLE
 
 * docs/specs/spec-fonctionnelle-v0.1.md
-* docs/agents/AGENT.md
+* docs/agents/AGENT.index.md
 * docs/agents/AGENT.backend.md
 * docs/agents/AGENT.frontend.md
 * docs/agents/AGENT.devops.md
@@ -31,7 +31,7 @@ Créer le fichier docs/specs/spec-fonctionnelle-v0.1.md en y collant EXACTEMENT 
 LIAISON AGENTS -> SPEC
 Dans chaque fichier agent existant, ajouter une section “Source unique de la vérité (SUT)” en haut, sans casser le reste :
 
-* docs/agents/AGENT.md
+* docs/agents/AGENT.index.md
   Ajouter:
   "Source unique de la verite: docs/specs/spec-fonctionnelle-v0.1.md"
 
@@ -91,7 +91,7 @@ Exemple minimal:
 
 $specPath = "docs/specs/spec-fonctionnelle-v0.1.md"
 $agents = @(
-"docs/agents/AGENT.md",
+"docs/agents/AGENT.index.md",
 "docs/agents/AGENT.backend.md",
 "docs/agents/AGENT.frontend.md",
 "docs/agents/AGENT.devops.md",

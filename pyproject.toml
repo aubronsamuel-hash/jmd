@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "jmd-backend"
 description = "Backend FastAPI service for the JMD planning platform"
 version = "0.1.0"
-readme = "README.md"
+readme = "PROJECT.readme.md"
 requires-python = ">=3.11"
 authors = [{ name = "JMD Team" }]
 dependencies = [

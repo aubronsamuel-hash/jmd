@@ -9,7 +9,7 @@ Tous les documents generes doivent rester alignes avec la spec.
 - Assurer la presence d'un changelog et d'un journal d'execution minimal.
 
 ## Architecture documentaire
-- `AGENT.md` hub principal, relie l'ensemble des sous-agents.
+- `AGENT.hub.md` hub principal, relie l'ensemble des sous-agents.
 - `docs/agents/` detaille les roles specifiques (backend, frontend, devops, docs).
 - `docs/roadmap/` trace les iterations numerotees (`step-XX.md`).
 - `docs/CHANGELOG.md` consigne les livraisons.
@@ -18,7 +18,7 @@ Tous les documents generes doivent rester alignes avec la spec.
 ## Regles de liens et sommaires
 - Utiliser des liens relatifs exclusivement.
 - Fournir un sommaire minimal dans chaque dossier de documentation.
-- Mettre a jour `docs/agents/README.md` a chaque ajout de sous-agent.
+- Mettre a jour `docs/agents/AGENTS.readme.md` a chaque ajout de sous-agent.
 - Verifier que la roadmap reference les livraisons et contient `VALIDATE?`.
 
 ## Docs guard
@@ -34,7 +34,7 @@ Tous les documents generes doivent rester alignes avec la spec.
 - `docs/codex/last_output.json` doit etre actualise a chaque execution.
 
 ## Checklist revue docs
-- [ ] AGENT.md et sous-agents synchronises et lies.
+- [ ] AGENT.hub.md et sous-agents synchronises et lies.
 - [ ] Roadmap et changelog mis a jour.
 - [ ] Sommaires `docs/*` a jour.
 - [ ] Guards documentaires passent.
