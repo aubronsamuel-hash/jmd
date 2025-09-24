@@ -6,33 +6,46 @@
 * S'appuie sur les exigences des modules 1 (roles et permissions), 2 (entites Utilisateur/Organisation) et 3.1 (Auth, comptes et organisations) de la spec v0.1.
 * Prepare les agents backend et frontend a disposer d'un socle securise avant d'aborder les projets et missions.
 
-## OBJECTIVES
+## OBJECTIF
 
-* Implementer les parcours d'inscription, connexion (mot de passe + lien magique) et invitation multi-organisation.
-* Mettre en place un modele RBAC couvrant les roles listes et les portees organisation/projet.
-* Exposer une gestion d'organisation (creation, parametres de marque, politiques paie de base).
-* Documenter et monitorer les flux d'authentification pour audit et observabilite initiale.
+* Livrer un socle d'authentification multi-organisation solide couvrant inscription, connexion (mot de passe et lien magique), invitations et changement de contexte organisationnel.
+* Mettre en place un modele RBAC complet avec roles et portees conformes a la spec fonctionnelle.
+* Outiller l'observabilite et l'audit des flux d'authentification des le demarrage du produit.
 
-## CHANGES
+## ACTIONS
 
-* Backend FastAPI: schemas Pydantic v2 pour Utilisateur, Organisation, Session; endpoints auth (signup, login, magic link), invitations, switch d'organisation.
-* Backend services: stockage SQLAlchemy des utilisateurs, roles, associations org, tokens, journaux d'audit minimal.
-* Frontend: vues onboarding/login, selection d'organisation, gestion de profil de base et parametres org.
-* Devops: secrets pour emails magic link, configuration CI (migrations, seeding comptes tests), observabilite (logs auth) et policies de securite.
-* Docs: mises a jour README/agents pour reflet architecture auth, sequence diagrammes des flux, guides RBAC.
+### Backend
 
-## TESTS
+1. Initialiser `src/backend` avec FastAPI, configuration Pydantic Settings et premiere migration Alembic pour Utilisateur, Organisation, Role et relations (associations user-org, invitations, sessions).
+2. Implementer les services et endpoints auth: inscription, connexion password, emission/validation de lien magique, invitation multi-organisation, changement d'organisation et journalisation minimale.
+3. Couvrir la logique RBAC (roles/permissions, verification portee) dans un module dedie et ecrire les tests Pytest (unitaires + integration) avec coverage >= 70 % sur le domaine auth/org.
 
-* Local: `pytest` (backend) avec couverture >= 70 % sur domaines auth/org; `pnpm test --filter frontend` pour composants login/onboarding; `tools/guards/run_all_guards.ps1`.
-* CI: workflows `backend-tests.yml`, `frontend-tests.yml`, `guards.yml` doivent passer; rapport coverage backend >= 70 %, frontend vitest >= 80 % lignes sur module auth.
+### Frontend
 
-## CI
+1. Bootstrapper l'application (React + Vite) si necessaire avec structure modules onboarding/auth.
+2. Creer les vues et formulaires pour inscription, connexion password, lien magique et switch d'organisation (avec gestion d'erreurs et etats de chargement).
+3. Mettre en place la gestion de session front (stockage tokens, rafraichissement, selection organisation) et ecrire tests vitest sur composants auth.
 
-* Necessite variables pour envoi email (SMTP_HOST, SMTP_USER, SMTP_PASS) en secrets, plus GH_TOKEN pour guards.
-* Ajouter caches poetry/pnpm si absent pour accelerer pipelines; verifier migrations init auth dans jobs backend.
+### DevOps & Infra
 
-## ARCHIVE
+1. Definir les secrets (SMTP_HOST, SMTP_USER, SMTP_PASS, tokens magie) et workflows GitHub Actions (backend-tests, frontend-tests, guards) avec caches poetry/pnpm.
+2. Ajouter scripts de seeding comptes tests et automatiser les migrations dans la CI.
+3. Configurer la collecte de logs structures auth (niveau audit) et le monitoring initial (dashboards, alertes 5xx/latence auth).
 
-* Apres validation: maj `docs/CHANGELOG.md`, `docs/codex/last_output.json`, `docs/roadmap/ROADMAP.readme.md` et README principal.
+### Documentation & Qualite
+
+1. Documenter les flux auth (diagrammes sequence), le guide RBAC et mettre a jour les AGENTs impactes.
+2. Completer `docs/CHANGELOG.md` et `docs/codex/last_output.json` pour suivre l'avancement, et maintenir `docs/roadmap/ROADMAP.readme.md` a jour.
+3. Executer `tools/guards/run_all_guards.ps1`, `pytest`, `pnpm test --filter frontend` avant chaque merge et analyser les rapports de couverture.
+
+## RESULTATS
+
+* A documenter apres realisation des actions precedentes.
+
+## PROCHAINES ETAPES
+
+* Planifier l'execution detaillee (Do) en sequence backend -> frontend -> devops -> docs.
+* Identifier les dependances externes (SMTP, stockage tokens, service email) et lever les risques.
+* Preparer la synchronisation avec les acteurs produit pour valider les parcours auth avant implementation.
 
 VALIDATE? no

@@ -1,17 +1,16 @@
 {
-  "timestamp": "2025-10-03T08:00:00Z",
+  "timestamp": "2025-09-24T08:44:17Z",
   "plan": [
-    "Deployer l'observabilite centrale (traces, logs structures, metrics) sur l'API backend.",
-    "Exposer un endpoint Prometheus et alimenter les metriques latence/erreurs/delais integrations.",
-    "Mettre en place les alertes temps reel (5xx, latence, queue calendrier, job retention).",
-    "Documenter runbooks SRE et tableaux de bord associes aux SLO (uptime, RPO, RTO)."
+    "Initialiser le backend FastAPI (models Utilisateur/Organisation, services auth, migrations Alembic) et etablir le module RBAC.",
+    "Mettre en place le frontend onboarding/auth (React + Vite) avec gestion de session multi-organisation et tests vitest.",
+    "Configurer la CI/CD (pytest, pnpm test, guards) et les secrets SMTP pour les liens magiques + seeds comptes tests.",
+    "Documenter les flux d'authentification, le guide RBAC et maintenir roadmap, changelog et journaux synchronises."
   ],
-  "last_update": "2025-10-03T18:00:00Z",
-  "status": "completed",
+  "last_update": "2025-09-24T08:44:17Z",
+  "status": "planning",
   "notes": [
-    "Module `backend.observability` (middleware, tracer, metrics registry, alerting) connecte a FastAPI et stockage app.state.",
-    "Instrumentation des routes, synchronisation calendrier et jobs retention avec spans correles + metriques `/metrics`.",
-    "Tests `tests/backend/test_observability.py` couvrant traces, alertes 5xx/queue/job et exposition Prometheus.",
-    "Documentation SRE publiee (`docs/observability/runbooks.md`, `docs/observability/dashboards.md`) et roadmap step-13 validee."
+    "Demarrage de la STEP 01 focalisee sur l'authentification multi-organisation.",
+    "Execution a realiser en sequence backend -> frontend -> devops -> docs avec verifications de couverture >= 70 % backend et 80 % frontend.",
+    "Les dependances externes (SMTP, stockage tokens) doivent etre clarifiees avant l'implementation."
   ]
 }
