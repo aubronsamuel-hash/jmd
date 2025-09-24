@@ -1,4 +1,4 @@
-# AGENT.md
+# AGENT.hub.md
 
 ## Role et Portee
 - Piloter la coordination des travaux du monorepo SaaS planning intermittent spectacle.
@@ -63,7 +63,7 @@
 - [AGENT frontend](docs/agents/AGENT.frontend.md)
 - [AGENT devops](docs/agents/AGENT.devops.md)
 - [AGENT docs](docs/agents/AGENT.docs.md)
-- [Sommaire agents](docs/agents/README.md)
+- [Sommaire agents](docs/agents/AGENTS.readme.md)
 
 ## Rappels operationnels
 - Basculer vers HTTPS si une action Git SSH echoue, puis documenter la correction.

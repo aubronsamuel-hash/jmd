@@ -55,7 +55,7 @@ try {
   }
 
   $agentDefinitions = @(
-    @{ Path = 'docs/agents/AGENT.md'; Lines = @('Source unique de la verite: docs/specs/spec-fonctionnelle-v0.1.md') },
+    @{ Path = 'docs/agents/AGENT.index.md'; Lines = @('Source unique de la verite: docs/specs/spec-fonctionnelle-v0.1.md') },
     @{ Path = 'docs/agents/AGENT.backend.md'; Lines = @('SUT: docs/specs/spec-fonctionnelle-v0.1.md', 'Les schemas, services et regles metier doivent respecter les modules et workflows de la spec.') },
     @{ Path = 'docs/agents/AGENT.frontend.md'; Lines = @('SUT: docs/specs/spec-fonctionnelle-v0.1.md', 'Les vues (planning, paie, materiel, notifications) et interactions (drag-drop, timeline) suivent la spec.') },
     @{ Path = 'docs/agents/AGENT.devops.md'; Lines = @('SUT: docs/specs/spec-fonctionnelle-v0.1.md', 'Les guards/CI verifient la presence et la reference de la spec.') },
