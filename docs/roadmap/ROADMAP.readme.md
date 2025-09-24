@@ -1,7 +1,7 @@
 # Roadmap
 
 ## Current Step
-- [STEP 01](./step-01.md)
+- [STEP 02](./step-02.md)
 
 ## History
-- A completer apres validation d'etapes precedentes.
+- [STEP 01](./step-01.md)
