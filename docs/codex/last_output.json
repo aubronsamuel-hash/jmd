@@ -1,16 +1,15 @@
 {
-  "timestamp": "2025-09-25T09:00:00Z",
+  "timestamp": "2025-09-26T10:00:00Z",
   "plan": [
-    "Stabiliser l'API auth (tests Pytest 86 % et commits explicites) et preparer l'exposition RBAC aux autres modules.",
-    "Prioriser l'implementation frontend onboarding/auth (React + Vite) avec couverture vitest.",
-    "Industrialiser la CI/CD (pytest, pnpm test, guards) et documenter les regles de persistance/UTC.",
-    "Mettre a jour la documentation (flux auth, guide RBAC) et suivre la roadmap."
+    "Stabiliser le backend projets/missions (tests Pytest 79.7 %) et orchestrer l'exposition RBAC aux autres modules WF-01.",
+    "Livrer les vues frontend (React/Vite) pour projets et gabarits de missions avec couverture Vitest et états optimistes.",
+    "Mettre à jour la documentation (diagrammes, guides RBAC, roadmap) et synchroniser les guards docs/roadmap."
   ],
-  "last_update": "2025-09-25T09:00:00Z",
-  "status": "done",
+  "last_update": "2025-09-26T10:00:00Z",
+  "status": "in_progress",
   "notes": [
-    "La regression initiale venait de sessions non commit et d'un melange naive/aware; correctifs appliques et consignes dans le changelog.",
-    "La couverture backend atteint 86 % et doit etre verifiee via `pytest` avant merge.",
-    "Prochaine priorite: orchestrer le frontend onboarding/auth et preparer les seeds/infra (SMTP)."
+    "Les APIs projets/missions (venues, tags, templates) sont en production avec RBAC Owner/Admin manage, Member/Viewer view.",
+    "Pytest couvre le domaine à 79.74 %; rester vigilant sur les routes venues pour ajouter des tests supplémentaires si nécessaire.",
+    "Prochain focus: frontend mission/project catalog + mise à jour des guards/documentation pour STEP 02."
   ]
 }

@@ -1,9 +1,9 @@
 # Roadmap
 
 ## SUMMARY
-- Iteration active : [STEP 02.01](./step-02.01.md) corrige les guards CI pour accepter les sous-etapes et le format `VALIDATE?` et desbloquer la progression.
-- Jalons en cours : [STEP 02](./step-02.md) etablit les fondations projets/missions selon la spec fonctionnelle v0.1 (modules 3.2 et 3.3).
-- Historique : [STEP 01](./step-01.md) a livre le socle auth multi-organisation et le RBAC initial.
+- Iteration active : [STEP 02](./step-02.md) livre le domaine backend projets/missions (RBAC, CRUD, tests) et prepare les travaux frontend.
+- Jalons a suivre : completion frontend/UX missions-projets et mise a jour documentaire/guards pour STEP 02.
+- Historique : [STEP 02.01](./step-02.01.md) a aligne les guards CI sur le format roadmap; [STEP 01](./step-01.md) a livre le socle auth multi-organisation et le RBAC initial.
 
 ## GOALS
 - Assurer la synchronisation entre roadmap, specification fonctionnelle et scripts de verification.
