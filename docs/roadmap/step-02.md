@@ -17,6 +17,7 @@
 ## RESULTATS
 - Les endpoints projets/missions retournent des reponses structurees (camelCase) avec venues et tags embarques; couverture Pytest 79.74 % (> 70 % cible backend).
 - Les permissions Owner/Admin gerent, Member/Viewer consultent; les erreurs de references (venue/tag inconnus) sont renvoyees en 404.
+- Suite au renforcement des tests (`tests/backend/test_venues.py`), le module venues est couvert sur les cycles CRUD et RBAC avec verification des conflits de nom et des droits Viewer.
 - Frontend, guards graphiques et documentation visuelle restent a implementer pour finaliser la step.
 
 ## PROCHAINES ETAPES
