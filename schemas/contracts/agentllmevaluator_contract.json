@@ -1,0 +1,35 @@
+{
+  "version": "0.1.20",
+  "name": "AgentLLMEvaluator",
+  "description": "Evalue la qualite des generations LLM.",
+  "topics": [
+    "llm.eval.completed",
+    "llm.eval.flagged"
+  ],
+  "envelope_schema": "schemas/contracts/event_envelope.schema.json",
+  "payload_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "AgentLLMEvaluator payload",
+    "type": "object",
+    "properties": {
+      "ref": {
+        "type": "string"
+      },
+      "data": {
+        "type": "object"
+      }
+    },
+    "required": [
+      "ref"
+    ],
+    "additionalProperties": true
+  },
+  "guards": {
+    "local": [
+      "tools/guards/schema_guard.ps1"
+    ],
+    "ci": [
+      ".github/workflows/guards.yml"
+    ]
+  }
+}

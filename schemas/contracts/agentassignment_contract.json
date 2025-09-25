@@ -1,0 +1,35 @@
+{
+  "version": "0.1.4",
+  "name": "AgentAssignment",
+  "description": "Affecte les talents aux missions planifiees.",
+  "topics": [
+    "assignment.created",
+    "assignment.updated"
+  ],
+  "envelope_schema": "schemas/contracts/event_envelope.schema.json",
+  "payload_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "AgentAssignment payload",
+    "type": "object",
+    "properties": {
+      "ref": {
+        "type": "string"
+      },
+      "data": {
+        "type": "object"
+      }
+    },
+    "required": [
+      "ref"
+    ],
+    "additionalProperties": true
+  },
+  "guards": {
+    "local": [
+      "tools/guards/schema_guard.ps1"
+    ],
+    "ci": [
+      ".github/workflows/guards.yml"
+    ]
+  }
+}
