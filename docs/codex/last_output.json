@@ -1,15 +1,15 @@
 {
-  "timestamp": "2025-09-26T10:00:00Z",
+  "timestamp": "2025-09-27T09:30:00Z",
   "plan": [
-    "Stabiliser le backend projets/missions (tests Pytest 79.7 %) et orchestrer l'exposition RBAC aux autres modules WF-01.",
-    "Livrer les vues frontend (React/Vite) pour projets et gabarits de missions avec couverture Vitest et états optimistes.",
-    "Mettre à jour la documentation (diagrammes, guides RBAC, roadmap) et synchroniser les guards docs/roadmap."
+    "Finaliser la montee en couverture backend (venues) et stabiliser le RBAC avant d'exposer le frontend.",
+    "Piloter la sous-etape STEP 02.02 pour livrer les vues React projets/missions (pnpm, Vitest, React Query).",
+    "Mettre a jour la documentation (roadmap, changelog) et preparer les guards UI/documentation associes."
   ],
-  "last_update": "2025-09-26T10:00:00Z",
+  "last_update": "2025-09-27T09:30:00Z",
   "status": "in_progress",
   "notes": [
-    "Les APIs projets/missions (venues, tags, templates) sont en production avec RBAC Owner/Admin manage, Member/Viewer view.",
-    "Pytest couvre le domaine à 79.74 %; rester vigilant sur les routes venues pour ajouter des tests supplémentaires si nécessaire.",
-    "Prochain focus: frontend mission/project catalog + mise à jour des guards/documentation pour STEP 02."
+    "Les tests Pytest incluent desormais `tests/backend/test_venues.py` couvrant CRUD, conflits et droits Viewer/Admin.",
+    "La sous-etape STEP 02.02 est ouverte pour cadrer l'implementation frontend (React + toolchain pnpm).",
+    "Prochain focus: initialiser la base frontend, configurer pnpm et ecrire les premiers tests Vitest." 
   ]
 }

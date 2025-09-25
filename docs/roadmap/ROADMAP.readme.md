@@ -2,6 +2,7 @@
 
 ## SUMMARY
 - Iteration active : [STEP 02](./step-02.md) livre le domaine backend projets/missions (RBAC, CRUD, tests) et prepare les travaux frontend.
+- Sous-etape en cours : [STEP 02.02](./step-02.02.md) organise la livraison des vues React projets/missions et la toolchain frontend.
 - Jalons a suivre : completion frontend/UX missions-projets et mise a jour documentaire/guards pour STEP 02.
 - Historique : [STEP 02.01](./step-02.01.md) a aligne les guards CI sur le format roadmap; [STEP 01](./step-01.md) a livre le socle auth multi-organisation et le RBAC initial.
 
