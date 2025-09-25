@@ -41,6 +41,17 @@ jobs:
           "has-pnpm=$hasValue" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           "project-dir=$projectDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           "lock-path=$lockPath" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+      - name: Configure pnpm home
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
+        run: |
+          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> "$GITHUB_ENV"
+          echo "$HOME/.local/share/pnpm" >> "$GITHUB_PATH"
+      - name: Install pnpm
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
       - name: Setup Node
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         uses: actions/setup-node@v4
@@ -59,17 +70,6 @@ jobs:
       - name: Prepare pnpm
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
-      - name: Configure pnpm home
-        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
-        run: |
-          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> "$GITHUB_ENV"
-          echo "$HOME/.local/share/pnpm" >> "$GITHUB_PATH"
-      - name: Set up pnpm
-        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-          run_install: false
       - name: Show pnpm version
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         run: pnpm --version
