@@ -53,18 +53,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Configure pnpm home
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
+        run: |
+          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> "$GITHUB_ENV"
+          echo "$HOME/.local/share/pnpm" >> "$GITHUB_PATH"
       - name: Set up pnpm
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
           run_install: false
-      - name: Enable corepack
-        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
-        run: corepack enable
-      - name: Prepare pnpm via corepack
-        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
-        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - name: Show pnpm version
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         run: pnpm --version
