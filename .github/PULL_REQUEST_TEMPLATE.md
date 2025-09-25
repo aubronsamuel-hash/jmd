@@ -1,13 +1,16 @@
 Ref: docs/roadmap/step-03.md
 
 ## Summary
-- 
+-
 
 ## Changes
-- 
+-
 
 ## Testing
-- 
+-
+
+## Codex Archive
+- Checklist et artefacts ajoutes?
 
 ## Checklist
 * [ ] Spec ajoutee/maj: docs/specs/spec-fonctionnelle-v0.1.md
