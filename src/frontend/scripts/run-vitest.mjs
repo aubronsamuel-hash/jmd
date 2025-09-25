@@ -4,26 +4,38 @@ import { spawn } from 'node:child_process';
 const rawArgs = process.argv.slice(2);
 const filteredArgs = [];
 let runInBandRequested = false;
+let ciModeRequested = false;
 
 for (const arg of rawArgs) {
   if (arg === '--runInBand' || arg === '--run-in-band') {
     runInBandRequested = true;
     continue;
   }
+  if (arg === '--ci') {
+    ciModeRequested = true;
+    continue;
+  }
   filteredArgs.push(arg);
 }
 
 const vitestArgs = [...filteredArgs];
+const shouldForceRunCommand = runInBandRequested || ciModeRequested;
 
-if (runInBandRequested) {
+if (shouldForceRunCommand) {
   const firstArg = vitestArgs[0];
   const hasExplicitCommand = Boolean(firstArg && !firstArg.startsWith('-'));
 
   if (!hasExplicitCommand) {
     vitestArgs.unshift('run');
   }
+}
 
+if (runInBandRequested) {
   vitestArgs.push('--pool=threads', '--maxWorkers=1', '--minWorkers=1', '--no-file-parallelism');
+}
+
+if (ciModeRequested) {
+  process.env.CI = process.env.CI ?? 'true';
 }
 
 const child = spawn('vitest', vitestArgs, {
