@@ -46,14 +46,18 @@ export function ProjectDetailPage(): JSX.Element {
     }
   }, [project]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!project) {
       return;
     }
-    updateProject.mutate({
-      ...formState,
-    });
+    try {
+      await updateProject.mutateAsync({
+        ...formState,
+      });
+    } catch (error) {
+      // L'erreur est remontée via updateProject.isError.
+    }
   };
 
   const handleDelete = () => {

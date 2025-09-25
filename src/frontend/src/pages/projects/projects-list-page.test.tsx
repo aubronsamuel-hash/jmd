@@ -68,7 +68,9 @@ describe("ProjectsListPage", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    renderWithProviders(<ProjectsListPage />, { initialEntries: ["/projects"] });
+    const { queryClient } = renderWithProviders(<ProjectsListPage />, {
+      initialEntries: ["/projects"],
+    });
 
     expect(await screen.findByText("Projets")).toBeInTheDocument();
     expect(await screen.findByRole("link", { name: "Festival d'été" })).toBeInTheDocument();
@@ -84,6 +86,14 @@ describe("ProjectsListPage", () => {
         "http://localhost:3000/api/projects",
         expect.objectContaining({ method: "POST" }),
       );
+    });
+
+    await waitFor(() => {
+      expect(queryClient.isFetching()).toBe(0);
+    });
+
+    await waitFor(() => {
+      expect(queryClient.isMutating()).toBe(0);
     });
   });
 });

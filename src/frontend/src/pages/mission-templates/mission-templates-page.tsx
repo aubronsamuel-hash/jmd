@@ -47,20 +47,25 @@ export function MissionTemplatesPage(): JSX.Element {
     [templates],
   );
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!formState.name.trim()) {
       return;
     }
-    createTemplate.mutate({
-      ...formState,
-      teamSize: Number(formState.teamSize) || 1,
-      requiredSkills: formState.requiredSkills.filter(Boolean),
-      defaultStartTime: formState.defaultStartTime || undefined,
-      defaultEndTime: formState.defaultEndTime || undefined,
-      defaultVenueId: formState.defaultVenueId || undefined,
-    });
-    setFormState(initialTemplate);
+    try {
+      await createTemplate.mutateAsync({
+        ...formState,
+        teamSize: Number(formState.teamSize) || 1,
+        requiredSkills: formState.requiredSkills.filter(Boolean),
+        defaultStartTime: formState.defaultStartTime || undefined,
+        defaultEndTime: formState.defaultEndTime || undefined,
+        defaultVenueId: formState.defaultVenueId || undefined,
+      });
+    } catch (error) {
+      // Les erreurs sont exposées via createTemplate.isError.
+    } finally {
+      setFormState(initialTemplate);
+    }
   };
 
   return (
@@ -363,19 +368,19 @@ function InlineTemplateEditor({
     }
   }, [template]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    updateTemplate.mutate(
-      {
+    try {
+      await updateTemplate.mutateAsync({
         ...localState,
         defaultVenueId: localState.defaultVenueId || undefined,
         defaultStartTime: localState.defaultStartTime || undefined,
         defaultEndTime: localState.defaultEndTime || undefined,
-      },
-      {
-        onSuccess: onClose,
-      },
-    );
+      });
+      onClose();
+    } catch (error) {
+      // L'état d'erreur est géré par React Query.
+    }
   };
 
   if (!template) {
