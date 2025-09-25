@@ -15,3 +15,6 @@
 ## 2025-09-27
 - Renforcement des tests Pytest sur les lieux (CRUD, conflits, permissions) via `tests/backend/test_venues.py` pour consolider STEP 02. Ref: docs/roadmap/step-02.md
 - Ouverture de la sous-etape frontend projets/missions [STEP 02.02](./roadmap/step-02.02.md) afin de planifier la livraison UI et la toolchain React. Ref: docs/roadmap/step-02.02.md
+
+## 2025-09-25
+- Mise en place du systeme Codex Archive and Replay v1 avec scaffolding des agents specialises, guards CI/CD et contrats JSON. Ref: docs/roadmap/step-05.md

@@ -1,0 +1,165 @@
+{
+  "generated_at": "2025-09-25T00:00:00Z",
+  "contracts": {
+    "AgentAvailability": {
+      "file": "schemas/contracts/agentavailability_contract.json",
+      "version": "0.1.3",
+      "topics": [
+        "availability.submitted",
+        "availability.snapshot"
+      ]
+    },
+    "AgentSchema": {
+      "file": "schemas/contracts/agentschema_contract.json",
+      "version": "0.1.2",
+      "topics": [
+        "schema.contract.published",
+        "schema.contract.deprecated"
+      ]
+    },
+    "AgentFinance": {
+      "file": "schemas/contracts/agentfinance_contract.json",
+      "version": "0.1.11",
+      "topics": [
+        "finance.entry.created",
+        "finance.audit.flagged"
+      ]
+    },
+    "AgentTimesheet": {
+      "file": "schemas/contracts/agenttimesheet_contract.json",
+      "version": "0.1.7",
+      "topics": [
+        "timesheet.submitted",
+        "timesheet.approved"
+      ]
+    },
+    "AgentIntegrations": {
+      "file": "schemas/contracts/agentintegrations_contract.json",
+      "version": "0.1.13",
+      "topics": [
+        "integration.connected",
+        "integration.failed"
+      ]
+    },
+    "AgentQA": {
+      "file": "schemas/contracts/agentqa_contract.json",
+      "version": "0.1.14",
+      "topics": [
+        "qa.test.run",
+        "qa.test.failed"
+      ]
+    },
+    "AgentLLMEvaluator": {
+      "file": "schemas/contracts/agentllmevaluator_contract.json",
+      "version": "0.1.20",
+      "topics": [
+        "llm.eval.completed",
+        "llm.eval.flagged"
+      ]
+    },
+    "AgentDataOps": {
+      "file": "schemas/contracts/agentdataops_contract.json",
+      "version": "0.1.19",
+      "topics": [
+        "data.pipeline.completed",
+        "data.quality.issue"
+      ]
+    },
+    "AgentPayroll": {
+      "file": "schemas/contracts/agentpayroll_contract.json",
+      "version": "0.1.6",
+      "topics": [
+        "payroll.ready",
+        "payroll.error"
+      ]
+    },
+    "AgentObservability": {
+      "file": "schemas/contracts/agentobservability_contract.json",
+      "version": "0.1.15",
+      "topics": [
+        "obs.metric.ingested",
+        "obs.alert.raised"
+      ]
+    },
+    "AgentScheduling": {
+      "file": "schemas/contracts/agentscheduling_contract.json",
+      "version": "0.1.5",
+      "topics": [
+        "schedule.generated",
+        "schedule.conflict"
+      ]
+    },
+    "AgentSecurity": {
+      "file": "schemas/contracts/agentsecurity_contract.json",
+      "version": "0.1.16",
+      "topics": [
+        "security.alert",
+        "security.clearance"
+      ]
+    },
+    "AgentImportExport": {
+      "file": "schemas/contracts/agentimportexport_contract.json",
+      "version": "0.1.12",
+      "topics": [
+        "import.completed",
+        "export.completed"
+      ]
+    },
+    "AgentCompliance": {
+      "file": "schemas/contracts/agentcompliance_contract.json",
+      "version": "0.1.10",
+      "topics": [
+        "compliance.check.passed",
+        "compliance.check.failed"
+      ]
+    },
+    "AgentInventory": {
+      "file": "schemas/contracts/agentinventory_contract.json",
+      "version": "0.1.9",
+      "topics": [
+        "inventory.reserved",
+        "inventory.released"
+      ]
+    },
+    "AgentAssignment": {
+      "file": "schemas/contracts/agentassignment_contract.json",
+      "version": "0.1.4",
+      "topics": [
+        "assignment.created",
+        "assignment.updated"
+      ]
+    },
+    "AgentDocs": {
+      "file": "schemas/contracts/agentdocs_contract.json",
+      "version": "0.1.17",
+      "topics": [
+        "docs.updated",
+        "docs.review.required"
+      ]
+    },
+    "AgentPlanner": {
+      "file": "schemas/contracts/agentplanner_contract.json",
+      "version": "0.1.1",
+      "topics": [
+        "roadmap.plan",
+        "roadmap.progress"
+      ]
+    },
+    "AgentUISystem": {
+      "file": "schemas/contracts/agentuisystem_contract.json",
+      "version": "0.1.18",
+      "topics": [
+        "ui.component.released",
+        "ui.audit.failed"
+      ]
+    },
+    "AgentNotifications": {
+      "file": "schemas/contracts/agentnotifications_contract.json",
+      "version": "0.1.8",
+      "topics": [
+        "notification.dispatch",
+        "notification.error"
+      ]
+    }
+  }
+}

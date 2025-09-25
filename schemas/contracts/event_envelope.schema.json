@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Codex Event Envelope",
+  "type": "object",
+  "required": [
+    "id",
+    "ts",
+    "topic",
+    "correlation_id",
+    "source_agent",
+    "payload",
+    "meta"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "topic": {
+      "type": "string"
+    },
+    "correlation_id": {
+      "type": "string"
+    },
+    "source_agent": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    },
+    "meta": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

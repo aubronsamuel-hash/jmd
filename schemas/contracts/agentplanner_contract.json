@@ -1,0 +1,35 @@
+{
+  "version": "0.1.1",
+  "name": "AgentPlanner",
+  "description": "Planifie les steps et publie les jalons.",
+  "topics": [
+    "roadmap.plan",
+    "roadmap.progress"
+  ],
+  "envelope_schema": "schemas/contracts/event_envelope.schema.json",
+  "payload_schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "AgentPlanner payload",
+    "type": "object",
+    "properties": {
+      "ref": {
+        "type": "string"
+      },
+      "data": {
+        "type": "object"
+      }
+    },
+    "required": [
+      "ref"
+    ],
+    "additionalProperties": true
+  },
+  "guards": {
+    "local": [
+      "tools/guards/schema_guard.ps1"
+    ],
+    "ci": [
+      ".github/workflows/guards.yml"
+    ]
+  }
+}
