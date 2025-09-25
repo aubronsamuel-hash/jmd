@@ -1,15 +1,16 @@
 {
-  "timestamp": "2025-09-27T09:30:00Z",
+  "timestamp": "2025-09-27T10:45:00Z",
   "plan": [
-    "Finaliser la montee en couverture backend (venues) et stabiliser le RBAC avant d'exposer le frontend.",
-    "Piloter la sous-etape STEP 02.02 pour livrer les vues React projets/missions (pnpm, Vitest, React Query).",
-    "Mettre a jour la documentation (roadmap, changelog) et preparer les guards UI/documentation associes."
+    "Structurer le workspace pnpm/Vite et initialiser le socle React + Tailwind/shadcn dans src/frontend.",
+    "Ecrire les clients API et hooks React Query pour projects, venues, mission-tags et mission-templates avec gestion d'erreurs partagee.",
+    "Construire les vues liste/detail projet et catalogue gabarits, couvrir les flux critiques avec Vitest + Testing Library.",
+    "Documenter les conventions UI et synchroniser roadmap/changelog une fois les ecrans valides."
   ],
-  "last_update": "2025-09-27T09:30:00Z",
+  "last_update": "2025-09-27T10:45:00Z",
   "status": "in_progress",
   "notes": [
-    "Les tests Pytest incluent desormais `tests/backend/test_venues.py` couvrant CRUD, conflits et droits Viewer/Admin.",
-    "La sous-etape STEP 02.02 est ouverte pour cadrer l'implementation frontend (React + toolchain pnpm).",
-    "Prochain focus: initialiser la base frontend, configurer pnpm et ecrire les premiers tests Vitest." 
+    "Les tests Pytest couvrent deja les APIs projets/missions; stabilite a surveiller pendant l'integration frontend.",
+    "La roadmap STEP 02.02 decrit maintenant les actions detaillees (scaffolding frontend, hooks React Query, UI accesible).",
+    "Prochaines actions: bootstraper le workspace pnpm/Vite puis mettre en place les suites lint/test (pnpm lint, pnpm test)."
   ]
 }
