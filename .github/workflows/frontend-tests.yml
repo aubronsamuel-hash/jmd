@@ -53,6 +53,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Enable Corepack
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
+        run: corepack enable
+      - name: Prepare pnpm
+        if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
+        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - name: Configure pnpm home
         if: ${{ steps.detect_pnpm.outputs.has-pnpm == 'true' }}
         run: |
