@@ -5,6 +5,22 @@ if (-not (Test-Path $archiveRoot)) {
     throw ".codex directory missing."
 }
 
+$latestOutputPath = Join-Path $archiveRoot "latest/last_output.json"
+if (-not (Test-Path $latestOutputPath)) {
+    throw ".codex/latest/last_output.json missing."
+}
+
+$latestContent = Get-Content $latestOutputPath -Raw
+if (-not $latestContent.Trim()) {
+    throw ".codex/latest/last_output.json is empty."
+}
+
+try {
+    $null = $latestContent | ConvertFrom-Json
+} catch {
+    throw ".codex/latest/last_output.json is not valid JSON."
+}
+
 $indexPath = Join-Path $archiveRoot "index.json"
 if (-not (Test-Path $indexPath)) {
     throw "index.json missing in archive."

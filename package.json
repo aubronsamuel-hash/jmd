@@ -9,6 +9,10 @@
     "frontend:lint": "corepack pnpm --filter @jmd/frontend lint",
     "frontend:format": "corepack pnpm --filter @jmd/frontend format",
     "frontend:format:check": "corepack pnpm --filter @jmd/frontend format:check",
-    "frontend:typecheck": "corepack pnpm --filter @jmd/frontend typecheck"
+    "frontend:typecheck": "corepack pnpm --filter @jmd/frontend typecheck",
+    "lint": "pnpm --filter @jmd/frontend lint",
+    "build": "pnpm --filter @jmd/frontend build",
+    "test": "pnpm --filter @jmd/frontend test",
+    "test:ci": "pnpm --filter @jmd/frontend test:ci"
   }
 }
