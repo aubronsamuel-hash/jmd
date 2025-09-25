@@ -27,4 +27,4 @@
 ## ARCHIVE
 - Aucune mise a jour du `CHANGELOG` ou de `docs/codex/last_output.json` tant que la sous-etape n'est pas validee.
 
-VALIDATE? no  (SAM ONLY may flip to yes)
+VALIDATE? Sam yes
