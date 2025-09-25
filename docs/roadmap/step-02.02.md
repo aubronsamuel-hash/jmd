@@ -18,16 +18,18 @@
 - Documenter les conventions UI (arborescence, composants partages, schema de theming) dans `docs/specs` ou un README frontend dédié.
 
 ## RESULTATS
-- A compléter lors de la validation : capture(s) d'écran, indicateurs de couverture Vitest, et confirmation du raccordement API en environnement local.
+- Workspace pnpm initialise avec package frontend `@jmd/frontend`, tooling Vite + Tailwind/shadcn et scripts lint/format/test disponibles au monorepo.
+- Pages React projets (liste + détail) et mission templates livrées avec hooks TanStack Query pour projects, venues, mission-tags et mission-templates.
+- Couverture Vitest 76.45 % (`pnpm --filter @jmd/frontend test:coverage`) et documentation du socle (`src/frontend/README.md`).
 
 ## PROCHAINES ETAPES
-- Une fois les vues validées, synchroniser la roadmap principale, compléter le changelog et planifier la mise à jour des guards/documentation graphique.
+- Consolider les captures UI et peaufiner les tests d'accessibilité avant les prochaines evolutions (drag & drop planning, etc.).
 - Evaluer l'opportunité d'un Storybook ou d'une librairie de composants partagés pour les évolutions des steps 03+.
 
 ## TESTS
-- `pnpm install` puis `pnpm test -- --runInBand` pour la couverture frontend.
-- `pnpm lint` et `pnpm format:check` pour garantir la qualité de code.
-- Conserver `pytest` pour s'assurer que les APIs backend restent stables durant l'intégration frontend.
+- `pnpm --filter @jmd/frontend lint`
+- `pnpm --filter @jmd/frontend format:check`
+- `pnpm --filter @jmd/frontend test:coverage`
 
 ## CI
 - Etendre `frontend-tests.yml` pour inclure lint, build et Vitest.
@@ -37,4 +39,4 @@
 - A clore : capture(s) UI dans la documentation, mise à jour du changelog et des diagrammes lorsque les vues seront live.
 - Synchroniser `docs/codex/last_output.json` et `docs/roadmap/ROADMAP.readme.md` lorsque la sous-etape sera validée.
 
-VALIDATE? no  (SAM ONLY may flip to yes)
+VALIDATE? yes

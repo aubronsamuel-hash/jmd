@@ -1,0 +1,14 @@
+{
+  "name": "jmd-monorepo",
+  "private": true,
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "frontend:dev": "pnpm --filter @jmd/frontend dev",
+    "frontend:build": "pnpm --filter @jmd/frontend build",
+    "frontend:test": "pnpm --filter @jmd/frontend test",
+    "frontend:lint": "pnpm --filter @jmd/frontend lint",
+    "frontend:format": "pnpm --filter @jmd/frontend format",
+    "frontend:format:check": "pnpm --filter @jmd/frontend format:check",
+    "frontend:typecheck": "pnpm --filter @jmd/frontend typecheck"
+  }
+}
