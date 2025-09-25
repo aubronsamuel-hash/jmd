@@ -60,7 +60,7 @@ describe("ProjectDetailPage", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    renderWithProviders(
+    const { queryClient } = renderWithProviders(
       <Routes>
         <Route path="/projects/:projectId" element={<ProjectDetailPage />} />
       </Routes>,
@@ -79,6 +79,14 @@ describe("ProjectDetailPage", () => {
         "http://localhost:3000/api/projects/project-1",
         expect.objectContaining({ method: "PUT" }),
       );
+    });
+
+    await waitFor(() => {
+      expect(queryClient.isFetching()).toBe(0);
+    });
+
+    await waitFor(() => {
+      expect(queryClient.isMutating()).toBe(0);
     });
   });
 });

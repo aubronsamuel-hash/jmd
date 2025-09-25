@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -88,7 +88,9 @@ describe("MissionTemplatesPage", () => {
     });
     vi.stubGlobal("fetch", fetchMock);
 
-    renderWithProviders(<MissionTemplatesPage />, { initialEntries: ["/mission-templates"] });
+    const { queryClient } = renderWithProviders(<MissionTemplatesPage />, {
+      initialEntries: ["/mission-templates"],
+    });
 
     expect(await screen.findByText("Gabarits de mission")).toBeInTheDocument();
     expect(await screen.findByText("Balance son")).toBeInTheDocument();
@@ -99,5 +101,13 @@ describe("MissionTemplatesPage", () => {
     await user.click(screen.getByRole("button", { name: "Éditer" }));
     const editor = await screen.findByTestId("mission-template-editor-template-1");
     expect(within(editor).getByLabelText("Nom")).toHaveValue("Balance son");
+
+    await waitFor(() => {
+      expect(queryClient.isFetching()).toBe(0);
+    });
+
+    await waitFor(() => {
+      expect(queryClient.isMutating()).toBe(0);
+    });
   });
 });

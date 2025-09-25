@@ -40,17 +40,22 @@ export function ProjectsListPage(): JSX.Element {
     return (projects ?? []).slice().sort((a, b) => a.name.localeCompare(b.name));
   }, [projects]);
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!formState.name.trim()) {
       return;
     }
-    createProject.mutate({
-      ...formState,
-      budgetCents: formState.budgetCents ? Number(formState.budgetCents) : undefined,
-      venueIds: formState.venueIds,
-    });
-    setFormState(initialFormState);
+    try {
+      await createProject.mutateAsync({
+        ...formState,
+        budgetCents: formState.budgetCents ? Number(formState.budgetCents) : undefined,
+        venueIds: formState.venueIds,
+      });
+    } catch (error) {
+      // L'erreur est gérée par React Query (états isError / error).
+    } finally {
+      setFormState(initialFormState);
+    }
   };
 
   return (

@@ -18,7 +18,7 @@ export function renderWithProviders(ui: ReactNode, { initialEntries = ["/"] } = 
   window.localStorage.clear();
   window.localStorage.setItem("jmd-session-token", "test-token");
 
-  return render(
+  const utils = render(
     <MemoryRouter initialEntries={initialEntries}>
       <SessionProvider>
         <ThemeProvider>
@@ -29,4 +29,6 @@ export function renderWithProviders(ui: ReactNode, { initialEntries = ["/"] } = 
       </SessionProvider>
     </MemoryRouter>,
   );
+
+  return { ...utils, queryClient };
 }
