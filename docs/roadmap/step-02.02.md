@@ -1,32 +1,40 @@
 # STEP 02.02 - Interfaces frontend projets et missions
 
 ## SUMMARY
-- Sous-etape ouverte pour couvrir la partie UI/UX de STEP 02 en livrant les ecrans React listes/détails projet et catalogue des gabarits.
-- Viser une integration avec les APIs backend existantes (projects, venues, mission-templates, mission-tags) via React Query.
-- Mettre en place la charte UI (shadcn/Tailwind) et les tests Vitest correspondant.
+- Sous-etape consacree a la creation du socle frontend React pour exploiter les APIs projets/missions livrées en STEP 02.
+- Livraison ciblee des vues liste/detail projet et du catalogue de gabarits de mission avec React Query et mutations optimistes.
+- Mise en place de la charte UI (Tailwind + shadcn/ui) et de la chaine de qualite (Vitest, lint, format) partagee.
 
 ## GOALS
-- Livrer les pages React Projet (liste + detail) et Mission Templates avec appels API et gestion des etats de chargement/erreurs.
-- Ajouter un store ou React Query pour synchroniser les donnees et fournir des mutations optimistes sur create/update/delete.
-- Couvrir les composants et hooks critiques par Vitest/Testing Library avec seuil de couverture >=70% sur le scope frontend.
+- Livrer les pages React Projet (liste + détail) et Mission Templates avec appels API robustes et gestion des états de chargement/erreur.
+- Installer React Query (ou équivalent store) pour synchroniser les données projets, lieux, tags et gabarits avec support des mutations CRUD.
+- Couvrir les composants, hooks et utilitaires critiques par Vitest/Testing Library et atteindre >=70 % de couverture sur le scope frontend.
 
-## CHANGES
-- Initialiser la base frontend (`src/frontend`) avec Vite + TypeScript + Tailwind/shadcn et configurer pnpm.
-- Implementer les hooks/API clients pour projects, venues, mission tags et templates avec gestion d'erreurs centralisee.
-- Creer les composants UI (tables, formulaires, modals) et routage correspondant, en assurant l'accessibilite clavier.
-- Ajouter suites Vitest et configurations lint/format specifiques au frontend.
+## ACTIONS
+- Initialiser la base frontend (`src/frontend`) avec Vite + TypeScript + Tailwind/shadcn, configurer pnpm et partager les scripts dans le monorepo.
+- Définir les clients d'API et hooks React Query pour projects, venues, mission-tags et mission-templates, incluant la gestion centralisée des erreurs et des loaders.
+- Construire les routes React (liste/detail projet, catalogue gabarits) avec composants accessibles (tables, formulaires, modals) et navigation coherent avec la spec.
+- Ajouter la configuration eslint/prettier front, les commandes `pnpm lint`, `pnpm format:check`, `pnpm test`, et mettre en place la collecte de couverture Vitest.
+- Documenter les conventions UI (arborescence, composants partages, schema de theming) dans `docs/specs` ou un README frontend dédié.
+
+## RESULTATS
+- A compléter lors de la validation : capture(s) d'écran, indicateurs de couverture Vitest, et confirmation du raccordement API en environnement local.
+
+## PROCHAINES ETAPES
+- Une fois les vues validées, synchroniser la roadmap principale, compléter le changelog et planifier la mise à jour des guards/documentation graphique.
+- Evaluer l'opportunité d'un Storybook ou d'une librairie de composants partagés pour les évolutions des steps 03+.
 
 ## TESTS
 - `pnpm install` puis `pnpm test -- --runInBand` pour la couverture frontend.
-- `pnpm lint` et `pnpm format:check` pour garantir la qualite de code.
-- Conserver `pytest` pour s'assurer que les APIs backend restent stables durant l'integration.
+- `pnpm lint` et `pnpm format:check` pour garantir la qualité de code.
+- Conserver `pytest` pour s'assurer que les APIs backend restent stables durant l'intégration frontend.
 
 ## CI
 - Etendre `frontend-tests.yml` pour inclure lint, build et Vitest.
-- Ajuster `guards.yml` si de nouvelles regles documentaires/front sont necessaires (captures, storybook, etc.).
+- Ajuster `guards.yml` si de nouvelles règles documentaires/front sont nécessaires (captures, storybook, etc.).
 
 ## ARCHIVE
-- A cloturer: capture(s) UI dans la documentation, mise a jour du changelog et des diagrammes lorsque les vues seront live.
-- Synchroniser `docs/codex/last_output.json` et `docs/roadmap/ROADMAP.readme.md` lorsque la sous-etape sera validee.
+- A clore : capture(s) UI dans la documentation, mise à jour du changelog et des diagrammes lorsque les vues seront live.
+- Synchroniser `docs/codex/last_output.json` et `docs/roadmap/ROADMAP.readme.md` lorsque la sous-etape sera validée.
 
 VALIDATE? no  (SAM ONLY may flip to yes)
