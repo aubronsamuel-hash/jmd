@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
-    project: ["./tsconfig.app.json", "./tsconfig.test.json"],
+    project: ["./tsconfig.app.json", "./tsconfig.test.json", "./tsconfig.node.json"],
     tsconfigRootDir: __dirname,
   },
   plugins: ["@typescript-eslint", "react", "react-hooks", "jsx-a11y", "testing-library"],

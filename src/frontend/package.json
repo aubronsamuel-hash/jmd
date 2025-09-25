@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "test": "node ./scripts/run-vitest.mjs",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "test:ci": "vitest run --reporter=default --coverage",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit"

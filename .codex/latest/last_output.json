@@ -1,7 +1,7 @@
 {
-  "step": "step-05",
-  "status": "reviewed",
-  "summary": "Checklist initiale verifiee, schemas personnes et alias agents ajoutes.",
-  "last_update": "2025-09-25T12:00:00Z",
-  "session": "239d6af0-b624-4e3a-a6e8-befc2169dab3"
+  "step": "step-05.01",
+  "status": "updated",
+  "summary": "Frontend CI stabilisee avec Node 20, cache pnpm et guards GH_TOKEN.",
+  "last_update": "2025-09-25T19:21:38Z",
+  "session": "4dc590d5-8a12-420f-94e1-20b8830e9465"
 }
