@@ -1,7 +1,7 @@
 {
   "step": "step-05",
-  "status": "in-progress",
-  "summary": "Scaffold multi-agents, guards CI et archive Codex initiale.",
+  "status": "reviewed",
+  "summary": "Checklist initiale verifiee, schemas personnes et alias agents ajoutes.",
   "session": "239d6af0-b624-4e3a-a6e8-befc2169dab3",
-  "last_update": "2025-09-25T00:00:00Z"
+  "last_update": "2025-09-25T12:00:00Z"
 }
